@@ -1,0 +1,11 @@
+.Navbar_Container{
+    display: flex;
+    justify-content: space-between;
+    padding: 53px 5vw 0 5vw;
+    .logo{
+        height: 33px;
+    }
+    .menu{
+        width: 40px;
+    }
+}
