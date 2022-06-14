@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/Resume-Builder/static/css/main.09eccb58.css",
-    "main.js": "/Resume-Builder/static/js/main.33ae006b.js",
+    "main.css": "/Resume-Builder/static/css/main.14820768.css",
+    "main.js": "/Resume-Builder/static/js/main.12724b83.js",
     "static/js/498.65001eb7.chunk.js": "/Resume-Builder/static/js/498.65001eb7.chunk.js",
     "static/js/703.d1db722d.chunk.js": "/Resume-Builder/static/js/703.d1db722d.chunk.js",
     "static/js/573.faa9d885.chunk.js": "/Resume-Builder/static/js/573.faa9d885.chunk.js",
@@ -19,15 +19,20 @@
     "static/media/nextYear.svg": "/Resume-Builder/static/media/nextYear.f0ac6b9477fdbd611714d1da7275d4d3.svg",
     "static/media/twitter.svg": "/Resume-Builder/static/media/twitter.a4db73a4cd14c92b8110a8b6048a981a.svg",
     "static/media/menu_icons2.svg": "/Resume-Builder/static/media/menu_icons2.138f9daeea83170d5c8f2995cdf7118e.svg",
+    "static/media/courses.svg": "/Resume-Builder/static/media/courses.faf1adaf8183ce83793f756abf8b3514.svg",
     "static/media/Calendar.svg": "/Resume-Builder/static/media/Calendar.06833119ed1e7587f0e2e2e5748ea51c.svg",
     "static/media/InfoCircle.svg": "/Resume-Builder/static/media/InfoCircle.7d87ab462f5a43243bd797c296d16ecf.svg",
     "static/media/edit.svg": "/Resume-Builder/static/media/edit.6686f2941672a0b18d7c2a29c342fd8c.svg",
     "static/media/edit2.svg": "/Resume-Builder/static/media/edit2.fe2cb5e6bc66a4eccdeec4b114624bf8.svg",
     "static/media/Eye.svg": "/Resume-Builder/static/media/Eye.af40506c4ed13b30f6c60f59474d399d.svg",
+    "static/media/summary.svg": "/Resume-Builder/static/media/summary.0dbd0c1b929a8d6b89e623eb3111bae0.svg",
+    "static/media/languages.svg": "/Resume-Builder/static/media/languages.5d60fc7653128f43e5ca292075e681d2.svg",
     "static/media/delete.svg": "/Resume-Builder/static/media/delete.37007970527daeb2c6f138ab1d2d9d6b.svg",
+    "static/media/work.svg": "/Resume-Builder/static/media/work.39994d32790d2173a2878c775c8f5da4.svg",
     "static/media/phone.svg": "/Resume-Builder/static/media/phone.a49878ecd6a80ef1c970c2341cd1d8d6.svg",
     "static/media/checkbox.svg": "/Resume-Builder/static/media/checkbox.5823636180e3b556d29a6d90fb54f722.svg",
     "index.html": "/Resume-Builder/index.html",
+    "static/media/personal.svg": "/Resume-Builder/static/media/personal.1aeb6b6fbd856577bad60d53b64c071c.svg",
     "static/media/addButton.svg": "/Resume-Builder/static/media/addButton.9daa2e6953b697528953e0bd88bae0a8.svg",
     "static/media/email.svg": "/Resume-Builder/static/media/email.8b3a4f089480d63be9b7cd0b5e02be1e.svg",
     "static/media/search_icon.svg": "/Resume-Builder/static/media/search_icon.3a95cec18c5034c7f0a38f939c0814eb.svg",
@@ -37,14 +42,14 @@
     "static/media/backarrow.svg": "/Resume-Builder/static/media/backarrow.7f4efd34f2a387a8d3954e49fed52ceb.svg",
     "static/media/info.svg": "/Resume-Builder/static/media/info.e9d88139006a8cea177611d4dcf0c2b7.svg",
     "static/media/calendarTop.svg": "/Resume-Builder/static/media/calendarTop.d9d6927914ef47fcd1214d6eb6a1241b.svg",
-    "main.09eccb58.css.map": "/Resume-Builder/static/css/main.09eccb58.css.map",
-    "main.33ae006b.js.map": "/Resume-Builder/static/js/main.33ae006b.js.map",
+    "main.14820768.css.map": "/Resume-Builder/static/css/main.14820768.css.map",
+    "main.12724b83.js.map": "/Resume-Builder/static/js/main.12724b83.js.map",
     "498.65001eb7.chunk.js.map": "/Resume-Builder/static/js/498.65001eb7.chunk.js.map",
     "703.d1db722d.chunk.js.map": "/Resume-Builder/static/js/703.d1db722d.chunk.js.map",
     "573.faa9d885.chunk.js.map": "/Resume-Builder/static/js/573.faa9d885.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.09eccb58.css",
-    "static/js/main.33ae006b.js"
+    "static/css/main.14820768.css",
+    "static/js/main.12724b83.js"
   ]
 }
