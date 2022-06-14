@@ -8,16 +8,25 @@ import Resume2 from '../../assets/images/Resume2.png'
 import Resume3 from '../../assets/images/Resume3.png'
 import Resume4 from '../../assets/images/Resume4.png'
 import Resume5 from '../../assets/images/Resume5.png'
-import { Resume1_Data } from '../../assets/data';
+import PrimaryResume from '../PrimaryResume/PrimaryResume';
+import { Resume1_Data, PrimaryResume_Data } from '../../assets/data';
 
 function RenderedResumes() {
+  let showSections={
+    workExperience: true,
+    Education: true,
+    Skills: true,
+    Certification: true,
+    Organization: true
+  }
   return (
     <div className='RenderedResumes_Container'>
         <p className='p'>Being easy to use doesn't have to mean that you are forced into using a pre-made template. Make your resume stand out from the pack by trying different colours, fonts, headline formats and much more.</p>
         <div className='resumes_container'>
           <HashLink to="/editor" > 
-            <Resume1 data={Resume1_Data} home={true}  grid={"40% 60%"} width={"calc(100% - 72px)"}/>
+            <Resume1 data={Resume1_Data} home={true}  grid={"40% 60%"} width={"400px"} showSections={showSections}/>
           </HashLink>
+          <PrimaryResume data={PrimaryResume_Data} width="499px" height="842px" />
           <img alt='' src={Resume2} />
           <img alt='' src={Resume3} />
           <img alt='' src={Resume4} />

@@ -3,6 +3,7 @@ import InputContainer from "./InputContainer";
 
 
 function SkillsSection({onArrayChange, data, j}) {
+    
     const [skillLevel, setSkillLevel] = useState(data.Skills[j].value)
 
     const onSkillClick = (index) => {

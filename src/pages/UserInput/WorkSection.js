@@ -20,7 +20,17 @@ const WorkSection = ({data, onArrayChange, index}) => {
                 name="title"
             />
             <InputContainer title="Employment Type" large={true} type={"select"}  />
-            <InputContainer title="Location" large={true} placeholder='example' />
+            <InputContainer 
+                title="Location"
+                large={true} 
+                placeholder='example' 
+                onChange={onArrayChange} 
+                value={workExperience[index].location} 
+                arrays={data.workExperience} 
+                index={index}
+                arrayName="workExperience" 
+                name="location"
+            />
             <InputContainer 
                 title="Company Name" 
                 large={true} 

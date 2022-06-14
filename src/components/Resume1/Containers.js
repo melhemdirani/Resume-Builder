@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from 'react';
+
 import work from '../../assets/images/work.png';
 import linkedIn from '../../assets/images/linkedIn.png';
 import twitter from '../../assets/images/twitter.svg';
@@ -5,8 +7,16 @@ import email from '../../assets/images/email.svg';
 import phone from '../../assets/images/phone.svg';
 import skill from '../../assets/images/skill.png';
 
+const CheckAvailabilty = (obj) => {
+    if(typeof obj != null){
+        return true
+    } else return false
+}
+
 export const WorkContainer = ({workExperience}) => {
-    return workExperience && (
+
+
+    return  (
         <div >
             <h3>
                 <img alt="" src={work} />
@@ -18,8 +28,8 @@ export const WorkContainer = ({workExperience}) => {
                         <h4>
                             {experience.title}
                         </h4>
-                        <p>{experience.company}</p>
-                        <p>{experience.startDate} - {experience.endDate}</p>
+                        <p>{experience.company} { experience.location && <span>-  {experience.location} </span>}</p>
+                        {(experience.startDate || experience.endDate ) && <p>{experience.startDate} - {experience.endDate}</p>}
                     </div>
                 )
             }
@@ -37,12 +47,18 @@ export const EducationContainer = ({Education}) => {
             {
                 Education.map((item,i) => 
                     <div className='Education_Container' key={i}>
-                        <h4>
-                            {item.title} in {item.field}
-                        </h4>
+                       { (item.tile || item.field )&&
+                            <h4>
+                                {item.title} in {item.field}
+                            </h4>
+                        }
                         <p>{item.university}</p>
-                        <p>{"("}{item.startDate} - {item.endDate}{")"}</p>
-                        <p>CGPA: {item.CGPA} out of {item.CGPAMax} </p>
+                        {   (item.startDate || item.endDate) &&
+                            <p>{"("}{item.startDate} - {item.endDate}{")"}</p>
+                        }
+                        { (item.CGPA || item.CGPAMax) &&
+                            <p>CGPA: {item.CGPA} out of {item.CGPAMax} </p>
+                        }
                     </div>
                 )
             }
@@ -60,11 +76,15 @@ export const CertificationContainer = ({Certification}) => {
             {
                Certification.map((item,i) => 
                     <div className='Certification_Container' key={i}>
-                        <h4>
-                            {item.company}
-                        </h4>
-                        <p>{item.title} {"("}{item.year}{")"}</p>
-                        <p>{item.website}</p>
+                        { item.company &&
+                            <h4>
+                                {item.company}
+                            </h4>
+                        }
+                        { (item.title || item.year) &&
+                            <p>{item.title} {"("}{item.year}{")"}</p>
+                        }
+                       { item.website && <p>{item.website}</p>}
                       
                     </div>
                 )
@@ -131,12 +151,14 @@ export const SkillsContainer = ({Skills}) => {
                 Work Experience
             </h3>
             {
-                Skills.map((skill, i) =>
-                    <div key={i} className='flex'>
-                        <p>{skill.name}</p>
-                        <Skill n={skill.value * 2} />
-                    </div>
-                )
+                Skills.map((skill, i) => {
+                    return (skill.name || skill.value) && (
+                        <div key={i} className='flex'>
+                            {skill.name && <p>{skill.name}</p>}
+                            {skill.value && <Skill n={skill.value * 2} />}
+                        </div>
+                    )
+                })
             }
         </div>
     )
@@ -155,7 +177,7 @@ export const OrganizationContainer = ({organization}) => {
                         <h4>{item.name}</h4>
                         <p>{item.position}</p>
                         <p>{item.sector}</p>
-                        <p>{item.startDate} - {item.endDate}</p>
+                        { (item.startDate || item.endDate) && <p>{item.startDate} - {item.endDate}</p>}
                     </div>
                 )
             }

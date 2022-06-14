@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { Profiler, useEffect, useState } from 'react';
 
 import addButton from '../../assets/images/addButton.svg';
 import infoCircle from '../../assets/images/InfoCircle.svg';
 import InputContainer from './InputContainer';
 
 function PersonalInfoSection({onPersonalChange, data }) {
+    const [image, setImage] = useState(data.PersonalInfo.profile)
 
+    const onImageChange = (e) => {
+        setImage(URL.createObjectURL(e.target.files[0]))
+    }
+
+    useEffect(() => {
+        let event = {target: {name: "profile", value: image }}
+        onPersonalChange(event)
+    }, [image])
     let PersonalInfo = data.PersonalInfo
     return (
         <div>
@@ -18,7 +27,7 @@ function PersonalInfoSection({onPersonalChange, data }) {
                 name="profession"
                 />
                 <div className='flex photoAdd'>
-                    <a className='flex'> <img alt="" src={addButton} /></a>
+                    <input type="file" name="image"  onChange={(e) => onImageChange(e)} className='custom-file-input' />
                     <span>Add Photo</span>
                     <img alt="" src={infoCircle} className='img'/>
                 </div>

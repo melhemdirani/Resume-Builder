@@ -7,6 +7,8 @@ import checkbox from '../../assets/images/checkbox.svg';
 
 const EducationSection = ({data, onArrayChange, index}) => {
     let Education = data.Education
+ 
+
     return(
         <div>
             <InputContainer 

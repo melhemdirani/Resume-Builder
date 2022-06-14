@@ -122,6 +122,9 @@
                     h2{
                         margin: 0;
                     }
+                    img{
+                        margin-left: 10px;
+                    }
                    
                 }
                 .flex{
@@ -221,6 +224,28 @@
                     .img{
                         margin-left: 7px;
                     }
+                    .custom-file-input{
+                        width: 71px;
+                        height: 71px;
+                        border: 1px dashed #D9D9D9;
+                    }
+                    .custom-file-input::-webkit-file-upload-button {
+                        visibility: hidden;
+                      }
+                      .custom-file-input::before {
+                        content: '';
+                        display: inline-block;
+                        background: url(../../assets/images/addButton.svg) no-repeat center;
+                        -webkit-user-select: none;
+                        cursor: pointer;
+                        font-weight: 700;
+                        font-size: 10pt;
+                        width: 71px;
+                        height: 71px;
+                        background-color: #FAFAFA;
+                        border-radius: 2px;
+                      }
+                    
                 }
             }
             .inputRow{

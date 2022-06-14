@@ -4,9 +4,135 @@ import phone from './images/phone.png';
 import message from './images/message.png';
 import home from './images/home.png';
 import resume1_profile from './images/resume1_profile.png';
+import profile from './images/primary_photo.png'
+
+export const PrimaryResume_Data = {
+    profile: profile,
+    workExperience:[
+        {
+            title: "Senior UI/UX Product Designer Enterprise",
+            company: "Enterprise name",
+            startDate: "Aug 2018",
+            endDate: "Present",
+            duration: "1 year",
+            description: "Directly collaborated with CEO and Product team to prototype, design and deliver the UI and UX experience with a lean design process: research, design, test, and iterate.",
+            location: "Paris",
+        },
+        {
+            title: "UI/UX Product Designer",
+            company: "Enterprise name",
+            startDate: "Aug 2013",
+            endDate: "Aug 2018",
+            duration: "5 years",
+            description:"Lead the UI design with the accountability of the design system, collaborated with product and development teams on core projects to improve product interfaces and experiences.",
+            location: "Paris",
+        },
+        {
+            title: "UI Designer",
+            company: "Enterprise name",
+            startDate: "Aug 2012",
+            endDate: "jul 2013 ",
+            duration: "1 year",
+            description:"Designed mobile UI applications for Orange R&D departement, BNP Paribas, La Poste, Le Cned...",
+            location: "Paris",
+        },
+        {
+            title: "Graphic Designer",
+            company: "Enterprise name",
+            startDate: "Sept 2010",
+            endDate: "jul 2012",
+            duration: "2 years",
+            description:"Designed print and web applications for Pau Brasil, Renault, Le théatre du Mantois, La mairie de Mantes la Ville...",
+            location: "Paris",
+        },
+    ],
+    Education: [
+        {
+            title: "Bachelor European in Graphic Design",
+            company: "School name",
+            startDate: "2009",
+            endDate: "2010",
+            location: "Bagnolet"
+        },
+        {
+            title: "BTS Communication Visuelle option Multimédia",
+            company: "School name",
+            startDate: "2007",
+            endDate: "2009",
+            location: "Bagnolet"
+        }
+    ],
+    PersonalInfo: {
+        Name: "Your",
+        Lastname: "Name",
+        profession: "Senior Product Designer",
+        place: "Vernouillet",
+        email: "yourmail@gmail.com",
+        phone: "+33 6 33 33 33"
+    },
+    Skills: [
+        {
+            name: "Industry Knowledge",
+            aligned: false,
+            skills: [
+                "Product Design",
+                "User Interface",
+                "User Experience",
+                "Interaction Design",
+                "Wireframing",
+                "Rapid Prototyping",
+                "Design Research"
+            ]   
+        },
+        {
+            name: "Tools & Technologies",
+            aligned: true,
+            skills: [
+                "Figma",
+                "Sketch",
+                "Protopie",
+                "Framer",
+                "Invision",
+                "Abstract",
+                "Zeplin",
+                "Google Analytics",
+                "Amplitude",
+                "Fullstory"
+
+            ]
+        },
+        {
+            name: "Other Skills",
+            aligned: true,
+            skills: [
+                "HTML",
+                "CSS",
+                "jQuery"
+            ]
+        },  
+        {
+            name: "Languages",
+            aligned: true,
+            skills: [
+                "French (native)",
+                "English (professionnal)",
+            ]
+        },
+        {
+            name: "Social",
+            aligned: false,
+            skills: [
+                "yoursite.com",
+                "linkedin.com/in/yourname",
+                "dribbble.com/yourname"
+            ]
+        },
+        
+    
+    ],
+}
 
 export const Resume1_Data = {
-    profile: resume1_profile,
     workExperience: [
         {
             title: "Business Development Manager",
@@ -71,7 +197,8 @@ export const Resume1_Data = {
         linkedIn: "Linkedin.com/in/ikayes.design",
         email: "ikayes.designer@gmail.com",
         twitter: "ikayes.design",
-        phone: "+8801631455383"
+        phone: "+8801631455383",
+        profile: resume1_profile,
     },
     Skills: [
         {

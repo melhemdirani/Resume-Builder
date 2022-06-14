@@ -16,7 +16,8 @@
 @media only screen and (max-width: 1521px) {
     .RenderedResumes_Container{
         .resumes_container{
-        grid-gap: 50px
+        grid-gap: 50px;
+        grid-template-columns: repeat(2, auto);
 
         }
     } 

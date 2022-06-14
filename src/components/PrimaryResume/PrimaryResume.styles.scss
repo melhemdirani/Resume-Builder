@@ -1,0 +1,56 @@
+.PrimaryResume_Container{
+    color: #101214;
+    line-height: 18px;
+    display: flex;
+    padding: 36px 48px 0 48px;
+    background-color: white;
+    justify-content: space-between;
+    h4, p, span {
+        font-size: 11px;
+    }
+    h3{
+        font-size: 9px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-weight: 400;
+    }
+    h4,p,h3,h2, span{
+        margin: 1px 0;
+    }
+    h3,p, span{
+        color: #73808D;
+
+    }
+    h4{
+        font-weight: 700;
+    }
+    h3 {
+        margin-top: 23px ;
+    }
+    h2{
+        font-size: 36px;
+        line-height: 28px;
+    }
+    .position{
+        font-size: 18px;
+        line-height: 28px;
+        color: #101214;
+        margin-top: 13px;
+    }
+    .c1{
+        width: 55%;
+    }
+    .c2{
+        width: 35%;
+        margin-left: 24px;
+        .title{
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 25px;
+        }
+        p, span{
+            line-height: 18px;
+        }
+    }
+    
+}

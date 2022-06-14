@@ -25,19 +25,21 @@ import { Resume1_Data } from '../../assets/data';
 import CertificationSection from './CertificationSection';
 import OrganizationSection from './OrganizationSection';
 import EditorContainer from './EditorContainer';
+import LanguageSection from './LanguageSection';
+import AddSections from './AddSections';
 
 
 
-const TitleContainer = ({title}) =>{
+const TitleContainer = ({title, onDelete}) =>{
     return(
-        <div className='TitleContainer flex space'>
+        <div className='TitleContainer  flex space'>
             <h2 className='flex'>
                 {title}
                 <img alt='' src={edit2} />
             </h2>
             <div>
                 <img alt="" src={eye} />
-                <img alt="" src={Delete} />
+                <img alt="" src={Delete} onClick={() => onDelete()}/>
             </div>
         </div>
     )
@@ -50,19 +52,37 @@ function UserInput() {
     const [ data, setData ] = useState(
         Resume1_Data
     )
-
  
     const [filledPersonal, setFilledPersonal] = useState(false)
-
+    const [showPersonal, setShowPersonal] = useState(true)
     const [workIndex, setWorkIndex] = useState(data.workExperience.length)
     const [educationIndex, setEducationIndex] = useState(data.Education.length)
     const [skillIndex, setSkillIndex] = useState(data.Skills.length)
     const [certIndex, setCertIndex] = useState(data.Certification.length)
     const [orgIndex, setOrgIndex] = useState(data.Organization.length)
+    const [langIndex, setLangIndex] = useState(data.Language.length)
+
     const [text, setText] = useState(data.PersonalInfo.summary)
+
+    const alternate = (variable) => {
+        if(variable.length === 0) {
+            return false
+        } else return true
+    }
+
+    const [showSections, setShowSections] = useState({
+        workExperience: alternate(workIndex),
+        Education: alternate(educationIndex),
+        Skills: alternate(skillIndex),
+        Certification: alternate(certIndex),
+        Organization: alternate(orgIndex),
+        Language: alternate(langIndex),
+    })
+
     const content = ContentState.createFromText(text);
 
     const [profSummary, setProfSummary]= useState(() => EditorState.createWithContent(content))
+
 
     const onPersonalChange = (e) => {
         
@@ -94,12 +114,12 @@ function UserInput() {
     const generatePdf = () => {
         const doc = new jsPDF("p", "px", [603, 612.0001]);
        
-      
         doc.setFont('Roboto-Regular', 'normal');
+        
         doc.setFontSize(8);
         let height = doc.internal.pageSize.getHeight();
         let width = doc.internal.pageSize.getWidth();
-        doc.html(ReactDOMServer.renderToStaticMarkup(<Resume1 data={Resume1_Data} height={height} />), {
+        doc.html(ReactDOMServer.renderToString(<Resume1 data={data} height={height} showSections={showSections} />), {
           x: 0,
           y: 0,
           callback: function (doc) {
@@ -110,7 +130,6 @@ function UserInput() {
         });
     }
     useEffect(() => {
-        
         let newText = "";
         for (let i = 0; i < mappedBlocks.length; i++) {
             const block = mappedBlocks[i];
@@ -123,7 +142,6 @@ function UserInput() {
             }
         }
         return(setText(newText))
-
     }, [profSummary])
 
     useEffect(() => {
@@ -135,6 +153,38 @@ function UserInput() {
     const mappedBlocks = blocks.map(
       block => (!block.text.trim() && "\n") || block.text
     );
+
+    const newObj = (obj) =>  Object.keys(obj).reduce((accumulator, key) => {
+        return {...accumulator, [key]: null};
+    }, {});
+
+    const onPersonalDelete = () => {
+        setData(data => ({
+            ...data,
+            PersonalInfo: newObj
+        }))
+        setShowPersonal(false)
+
+    }
+   
+    const onArrayDelete = (setFunction,  Array, arrayName) => {
+        setFunction(0);
+        setData(data => ({
+            ...data,
+            [Array]: [newObj(arrayName)]
+        }))
+        setShowSections(sections => ({
+            ...sections,
+            [Array]: false
+        }))
+        console.log(data)
+    }
+
+    const addPersonal = () => {
+        if(!showPersonal){
+            setShowPersonal(true)
+        }
+    }
 
     return (
         <div className='UserInput_Container'>
@@ -170,96 +220,159 @@ function UserInput() {
                             <a>Education</a>
                         </div>
                         <div className='inputs'>
-                            <TitleContainer title={"Personal Info"} />
-                            <PersonalInfoSection onPersonalChange={onPersonalChange} data={data} />
-                            <TitleContainer title={"Professional Summary"} />
-                            <EditorContainer editorState={profSummary} setEditorState={setProfSummary}/>
-
-                            <TitleContainer title={"Work Experience"} />
-                            { [...Array(workIndex)].map((e, index) => 
-                                <WorkSection 
-                                 data={data}  
-                                 onArrayChange={onArrayChange} 
-                                 index={index} 
-                                 key={index}  
-                                />
-                            )}
-                            <button 
-                             className='add_button' 
-                             onClick={() => addMore(data.workExperience, setWorkIndex, workIndex)}
-                            > 
-                                + Add More Position
+                            <button onClick={() => addPersonal() }>
+                                Add personal
                             </button>
-                            <TitleContainer title={"Education"} />
-                            { [...Array(educationIndex)].map((e, index) => 
-                                <EducationSection 
-                                 data={data}  
-                                 onArrayChange={onArrayChange} 
-                                 index={index} 
-                                 key={index}  
-                                />
-                            )}
-                            <button 
-                             className='add_button' 
-                             onClick={() => addMore(data.Education, setEducationIndex, educationIndex)}
-                            > 
-                                + Add More Education
-                            </button>
-                            <TitleContainer title={"Skills"} />
-                             { [...Array(skillIndex)].map((e, index) => 
-                                <SkillsSection 
-                                   onArrayChange={onArrayChange} 
-                                   data={data} 
-                                   j={index}
-                                   key={index}
-                               />
-                            )}
-                            <button 
-                             className='add_button' 
-                             onClick={() => addMore(data.Skills, setSkillIndex, skillIndex)}
-                            > 
-                                + Add More Skill
-                            </button>
-                            <TitleContainer title={"Certification"} />
-                            { [...Array(certIndex)].map((e, index) => 
-                                <CertificationSection 
-                                   onArrayChange={onArrayChange} 
-                                   data={data} 
-                                   index={index}
-                                   key={index}
-                               />
-                            )}
-                            <button 
-                             className='add_button' 
-                             onClick={() => addMore(data.Certification, setCertIndex, certIndex)}
-                            > 
-                                + Add More Certification
-                            </button>
-                            <TitleContainer title={"Organization"} />
-                            { [...Array(orgIndex)].map((e, index) => 
-                                <OrganizationSection 
-                                   onArrayChange={onArrayChange} 
-                                   data={data} 
-                                   index={index}
-                                   key={index}
-                               />
-                            )}
-                            <button 
-                             className='add_button' 
-                             onClick={() => addMore(data.Organization, setOrgIndex, orgIndex)}
-                            > 
-                                + Add More Organization
-                            </button>
-                            <p className='flex inputRow'><img alt="" src={checkbox} /> Hide Level </p>
+                            {  showPersonal && 
+                                <div>
+                                    <TitleContainer title={"Personal Info"} onDelete={onPersonalDelete}/>
+                                    <PersonalInfoSection onPersonalChange={onPersonalChange} data={data} />  
+                                    <TitleContainer title={"Professional Summary"} />
+                                    <EditorContainer editorState={profSummary} setEditorState={setProfSummary}/>
+                                </div>
+                            }
+                            { showSections.workExperience &&
+                                <div>
+                                    <TitleContainer 
+                                        title={"Work Experience"} 
+                                        onDelete={
+                                            () => onArrayDelete(
+                                                setWorkIndex, 
+                                                "workExperience", 
+                                                data.workExperience, 
+                                            )
+                                        }
+                                    />
+                                    { [...Array(workIndex)].map((e, index) => 
+                                        <WorkSection 
+                                        data={data}  
+                                        onArrayChange={onArrayChange} 
+                                        index={index} 
+                                        key={index}  
+                                        />
+                                    )}
+                                    <button 
+                                    className='add_button' 
+                                    onClick={() => addMore(data.workExperience, setWorkIndex, workIndex)}
+                                    > 
+                                        + Add More Position
+                                    </button>
+                                </div>
+                            }
+                            {   showSections.Education &&
+                                <div>
+                                    <TitleContainer 
+                                        title={"Education"} 
+                                        onDelete={
+                                            () => onArrayDelete(
+                                                setEducationIndex, 
+                                                "Education", 
+                                                data.Education,
+                                            )
+                                        }
+                                    />
+                                    { [...Array(educationIndex)].map((e, index) => 
+                                        <EducationSection 
+                                        data={data}  
+                                        onArrayChange={onArrayChange} 
+                                        index={index} 
+                                        key={index}  
+                                        />
+                                    )}
+                                    <button 
+                                    className='add_button' 
+                                    onClick={() => addMore(data.Education, setEducationIndex, educationIndex)}
+                                    > 
+                                        + Add More Education
+                                    </button>
+                                </div>
+                            }
+                            { showSections.Skills &&
+                                <div>
+                                    <TitleContainer title={"Skills"} onDelete={() => onArrayDelete(setSkillIndex, "Skills", data.Skills)}/>
+                                    { [...Array(skillIndex)].map((e, index) => 
+                                        <SkillsSection 
+                                        onArrayChange={onArrayChange} 
+                                        data={data} 
+                                        j={index}
+                                        key={index}
+                                    />
+                                    )}
+                                    <button 
+                                    className='add_button' 
+                                    onClick={() => addMore(data.Skills, setSkillIndex, skillIndex)}
+                                    > 
+                                        + Add More Skill
+                                    </button>
+                                    <p className='flex inputRow'><img alt="" src={checkbox} /> Hide Level </p>
+                                </div>
+                            }
+                            {   showSections.Certification &&
+                                <div>
+                                    <TitleContainer title={"Certification"} onDelete={() => onArrayDelete(setCertIndex, "Certification", data.Certification)}/>
+                                    { [...Array(certIndex)].map((e, index) => 
+                                        <CertificationSection 
+                                        onArrayChange={onArrayChange} 
+                                        data={data} 
+                                        index={index}
+                                        key={index}
+                                    />
+                                    )}
+                                    <button 
+                                    className='add_button' 
+                                    onClick={() => addMore(data.Certification, setCertIndex, certIndex)}
+                                    > 
+                                        + Add More Certification
+                                    </button>
+                                </div>
+                            }
+                            {   showSections.Organization &&
+                                <div>
+                                    <TitleContainer title={"Organization"} onDelete={() => onArrayDelete(setOrgIndex, "Organization", data.Organization)}/>
+                                    { [...Array(orgIndex)].map((e, index) => 
+                                        <OrganizationSection 
+                                        onArrayChange={onArrayChange} 
+                                        data={data} 
+                                        index={index}
+                                        key={index}
+                                    />
+                                    )}
+                                    <button 
+                                    className='add_button' 
+                                    onClick={() => addMore(data.Organization, setOrgIndex, orgIndex)}
+                                    > 
+                                        + Add More Organization
+                                    </button>
+                                </div>
+                            }
+                            {   showSections.Language &&
+                                <div>
+                                    <TitleContainer title={"Language"} onDelete={() => onArrayDelete(setLangIndex, "Language", data.Language)}/>
+                                    { [...Array(langIndex)].map((e, index) => 
+                                        <LanguageSection 
+                                        onArrayChange={onArrayChange} 
+                                        data={data} 
+                                        j={index}
+                                        key={index}
+                                    />
+                                    )}
+                                    <button 
+                                    className='add_button' 
+                                    onClick={() => addMore(data.Organization, setOrgIndex, orgIndex)}
+                                    > 
+                                        + Add More Organization
+                                    </button>
+                                </div>
+                            }
                             <button className='addSection_button'>
                                 <img alt="" src={addButton} />
                                 <span>Add More Section</span>
                             </button>
-                            </div>
+                        </div>
                     </div>
                 </div>
                 <div className='resumes'>
-                    <Resume1 data={data} filledPersonal={filledPersonal} grid={"40% 60%"} width={"100%"}/>
+                    <Resume1 data={data} filledPersonal={filledPersonal} grid={"40% 60%"} width={"100%"} showSections={showSections} height="632px"/>
                 </div>
             </div>
         </div>
