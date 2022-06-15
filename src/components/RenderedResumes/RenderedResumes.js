@@ -17,7 +17,8 @@ function RenderedResumes() {
     Education: true,
     Skills: true,
     Certification: true,
-    Organization: true
+    Organization: true,
+    Language: true
   }
   return (
     <div className='RenderedResumes_Container'>

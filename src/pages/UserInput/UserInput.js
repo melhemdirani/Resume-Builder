@@ -26,20 +26,20 @@ import CertificationSection from './CertificationSection';
 import OrganizationSection from './OrganizationSection';
 import EditorContainer from './EditorContainer';
 import LanguageSection from './LanguageSection';
-import AddSections from './AddSections';
+import AddSections from '../../components/AddSections/AddSections';
 
 
 
 const TitleContainer = ({title, onDelete}) =>{
     return(
-        <div className='TitleContainer  flex space'>
+        <div className='TitleContainer flex space'>
             <h2 className='flex'>
                 {title}
                 <img alt='' src={edit2} />
             </h2>
             <div>
                 <img alt="" src={eye} />
-                <img alt="" src={Delete} onClick={() => onDelete()}/>
+                <img alt="" src={Delete} onClick={() => onDelete()} className="DeleteButton" />
             </div>
         </div>
     )
@@ -52,7 +52,8 @@ function UserInput() {
     const [ data, setData ] = useState(
         Resume1_Data
     )
- 
+
+
     const [filledPersonal, setFilledPersonal] = useState(false)
     const [showPersonal, setShowPersonal] = useState(true)
     const [workIndex, setWorkIndex] = useState(data.workExperience.length)
@@ -61,6 +62,7 @@ function UserInput() {
     const [certIndex, setCertIndex] = useState(data.Certification.length)
     const [orgIndex, setOrgIndex] = useState(data.Organization.length)
     const [langIndex, setLangIndex] = useState(data.Language.length)
+    const [showAddSection, setShowAddSection] = useState(false)
 
     const [text, setText] = useState(data.PersonalInfo.summary)
 
@@ -155,16 +157,18 @@ function UserInput() {
     );
 
     const newObj = (obj) =>  Object.keys(obj).reduce((accumulator, key) => {
-        return {...accumulator, [key]: null};
+        return {...accumulator, [key]: ""};
     }, {});
 
     const onPersonalDelete = () => {
         setData(data => ({
             ...data,
-            PersonalInfo: newObj
+            PersonalInfo: newObj(data.PersonalInfo)
         }))
-        setShowPersonal(false)
+        let NewContent = ContentState.createFromText("");
 
+        setProfSummary(() => EditorState.createWithContent(NewContent))
+        setShowPersonal(false)
     }
    
     const onArrayDelete = (setFunction,  Array, arrayName) => {
@@ -177,17 +181,38 @@ function UserInput() {
             ...sections,
             [Array]: false
         }))
-        console.log(data)
     }
 
-    const addPersonal = () => {
-        if(!showPersonal){
-            setShowPersonal(true)
-        }
+    const addDetail = (setIndex, array) => {
+        setIndex(1)
+        setShowSections(
+            showSections => ({
+                ...showSections,
+                [array]: true
+            })
+        )
     }
+    useEffect(() => {
+        console.log("personal",data.PersonalInfo)
+        console.log("new",data.PersonalInfo)
 
+    }, [data.PersonalInfo])
     return (
-        <div className='UserInput_Container'>
+
+    <div className='UserInput_Container' style={showAddSection ? { marginTop: "-100vh" } : {margin: "0"}}>
+            {showAddSection && 
+                <AddSections 
+                    addDetail={addDetail}
+                    setWorkIndex={setWorkIndex}
+                    setEducationIndex={setEducationIndex}
+                    setSkillIndex={setSkillIndex}
+                    setCertIndex={setCertIndex}
+                    setLangIndex={setLangIndex}
+                    setOrgIndex={setOrgIndex}
+                    setShowAddSection={setShowAddSection}
+                    setShowPersonal={setShowPersonal}
+                />
+            }
             <div className='navigation'>
                 <HashLink to="/" className='flex'>
                     <img alt='' src={arrow} />
@@ -213,26 +238,32 @@ function UserInput() {
                     </div>
                     <div className='row2'>
                         <div className='Menu'>
-                            <a>Basic Info</a>
-                            <a>Summary</a>
-                            <a>Skills</a>
-                            <a>Work Experience</a>
-                            <a>Education</a>
+                            { showPersonal && <HashLink to='/editor/#personal'>Basic Info</HashLink>}
+                            {showPersonal && <HashLink to='/editor/#summary'>Summary</HashLink>}
+                            {showSections.Skills && <HashLink to='/editor/#Skills'>Skills</HashLink>}
+                            {showSections.workExperience && <HashLink to='/editor/#workExperience'>Work Experience</HashLink>}
+                           {showSections.Education && <HashLink to='/editor/#Education'>Education</HashLink>}
+                           {showSections.Certification && <HashLink to='/editor/#Certification'>Certification</HashLink>}
+                           {showSections.Organization && <HashLink to='/editor/#Organization'>Organization</HashLink>}
+                           {showSections.Language && <HashLink to='/editor/#Language'>Language</HashLink>}
                         </div>
                         <div className='inputs'>
-                            <button onClick={() => addPersonal() }>
-                                Add personal
-                            </button>
                             {  showPersonal && 
-                                <div>
+                                <div id='personal'>
                                     <TitleContainer title={"Personal Info"} onDelete={onPersonalDelete}/>
                                     <PersonalInfoSection onPersonalChange={onPersonalChange} data={data} />  
+                                   
+                                </div>
+                            }
+                            {  showPersonal && 
+                                <div id='summary'>
                                     <TitleContainer title={"Professional Summary"} />
                                     <EditorContainer editorState={profSummary} setEditorState={setProfSummary}/>
                                 </div>
                             }
+
                             { showSections.workExperience &&
-                                <div>
+                                <div id='workExperience'>
                                     <TitleContainer 
                                         title={"Work Experience"} 
                                         onDelete={
@@ -260,7 +291,7 @@ function UserInput() {
                                 </div>
                             }
                             {   showSections.Education &&
-                                <div>
+                                <div id='Education'>
                                     <TitleContainer 
                                         title={"Education"} 
                                         onDelete={
@@ -288,7 +319,7 @@ function UserInput() {
                                 </div>
                             }
                             { showSections.Skills &&
-                                <div>
+                                <div id='Skills'>
                                     <TitleContainer title={"Skills"} onDelete={() => onArrayDelete(setSkillIndex, "Skills", data.Skills)}/>
                                     { [...Array(skillIndex)].map((e, index) => 
                                         <SkillsSection 
@@ -308,7 +339,7 @@ function UserInput() {
                                 </div>
                             }
                             {   showSections.Certification &&
-                                <div>
+                                <div id='Certification'>
                                     <TitleContainer title={"Certification"} onDelete={() => onArrayDelete(setCertIndex, "Certification", data.Certification)}/>
                                     { [...Array(certIndex)].map((e, index) => 
                                         <CertificationSection 
@@ -327,7 +358,7 @@ function UserInput() {
                                 </div>
                             }
                             {   showSections.Organization &&
-                                <div>
+                                <div id='Organization'>
                                     <TitleContainer title={"Organization"} onDelete={() => onArrayDelete(setOrgIndex, "Organization", data.Organization)}/>
                                     { [...Array(orgIndex)].map((e, index) => 
                                         <OrganizationSection 
@@ -346,7 +377,7 @@ function UserInput() {
                                 </div>
                             }
                             {   showSections.Language &&
-                                <div>
+                                <div id='Language'>
                                     <TitleContainer title={"Language"} onDelete={() => onArrayDelete(setLangIndex, "Language", data.Language)}/>
                                     { [...Array(langIndex)].map((e, index) => 
                                         <LanguageSection 
@@ -364,9 +395,9 @@ function UserInput() {
                                     </button>
                                 </div>
                             }
-                            <button className='addSection_button'>
+                            <button className='addSection_button' onClick={() => setShowAddSection(true)}>
                                 <img alt="" src={addButton} />
-                                <span>Add More Section</span>
+                                <span >Add More Section</span>
                             </button>
                         </div>
                     </div>

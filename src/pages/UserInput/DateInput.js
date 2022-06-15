@@ -38,13 +38,14 @@ const Calendar = ({selectedMonth, setSelectedMonth, selectedYear, setSelectedYea
     )
 }
 
-const DatePicker = ({title, month, onChange, arrayName, arrays, index, date}) => {
+const DatePicker = ({title, month, onChange, arrayName, arrays, index, date, present, setPresent}) => {
 
+console.log(date)
     const [selectedMonth, setSelectedMonth] = useState(`${month}`)
     const [selectedYear, setSelectedYear] = useState(2020)
     const [startRender, setStartRender] = useState(`${date}`)
     const [ focus, setFocus ] = useState(false)
-
+    const [ renderedDate, setRenderedDate] = useState()
 
     const [alternateCalendar, setAlternateCalendar] = useState(false)
 
@@ -55,11 +56,16 @@ const DatePicker = ({title, month, onChange, arrayName, arrays, index, date}) =>
         if(!alternateCalendar){
             setAlternateCalendar(true)
         }
+        if(present){
+            setPresent(false)
+        }
     }
 
     useEffect(() => {
         let selectedDate = selectedMonth + " " + selectedYear 
-       
+        if(startRender !== selectedDate){
+            setStartRender(selectedDate)
+        }
         let name = title === "Start date" ? "startDate" : "endDate"
 
         let e ={ target: {name: name, value: selectedDate}}
@@ -68,21 +74,28 @@ const DatePicker = ({title, month, onChange, arrayName, arrays, index, date}) =>
         }
 
     }, [selectedMonth, selectedYear, focus])
-  
-    useEffect(() => {
-        let selected = selectedMonth + " " + selectedYear
-        if(focus ){
-            setStartRender(selected)
-        }
 
-    }, [selectedMonth, selectedYear, alternateCalendar, focus])
+    useEffect(() => {
+        let selectedDate = present ? "present" : selectedMonth + " " + selectedYear 
+        let name = title === "Start date" ? "startDate" : "endDate"
+        let e ={ target: {name: name, value: selectedDate}}
+        if (present){
+            setStartRender("present")
+            onChange(e, arrays, arrayName, index );
+        } else if(focus) {
+            setStartRender(selectedDate);
+            onChange(e, arrays, arrayName, index );
+        }
+    }, [present])
+  
+
 
     let src = title === "Start date" ? dateSeparator : calendar
 
 
     return(
         <div className='flex date' onClick={handleStartClick}>
-            <span>{startRender} </span> 
+            <span>{startRender}</span> 
             <img alt="" src={src} /> 
             { alternateCalendar &&
                 <Calendar 
@@ -97,8 +110,7 @@ const DatePicker = ({title, month, onChange, arrayName, arrays, index, date}) =>
     )
 }
 
-export default function DateInput({onChange, arrayName, arrays, index, startDate, endDate}) {
-
+export default function DateInput({onChange, arrayName, arrays, index, startDate, endDate, present, setPresent}) {
   return (
       <div className='InputContainer input2 inputRow'>
             <label>
@@ -115,13 +127,15 @@ export default function DateInput({onChange, arrayName, arrays, index, startDate
            index={index}
         />
         <DatePicker 
-           title="End date"
-           month="Dec"
-           onChange={onChange}
-           arrayName={arrayName}
-           date={endDate}
-           arrays={arrays}
-           index={index}
+            title="End date"
+            month="Dec"
+            onChange={onChange}
+            arrayName={arrayName}
+            date={endDate}
+            arrays={arrays}
+            index={index}
+            present={present}
+            setPresent={setPresent}
         />
         </div>
     </div>

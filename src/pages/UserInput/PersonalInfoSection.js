@@ -53,7 +53,7 @@ function PersonalInfoSection({onPersonalChange, data }) {
                 title="LinkedIn" 
                 placeholder='Ex:' 
                 onChange={onPersonalChange} 
-                value={PersonalInfo.linkedin} 
+                value={PersonalInfo.linkedIn} 
                 name="linkedIn" 
                 />
                 <InputContainer 

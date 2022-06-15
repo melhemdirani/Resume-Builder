@@ -2,6 +2,23 @@
     input, .input{
         border: 1px solid #DEDEDE;
     }
+    .Menu{
+        display: flex;
+        flex-direction: column;
+        top: 35px;
+        position: sticky;
+        align-self: flex-start;
+        a{
+          font-family: 'Roboto';
+          font-size: 14px;
+          line-height: 250%;
+          padding-left: 16px;
+          margin: 0;
+        }
+        a:first-child{
+          border-left: 4px solid #1890FF;
+        }
+      }
     .resumes{
         margin-top: 75.45px;
         margin-right: 105px;
@@ -81,22 +98,7 @@
             justify-content: space-between;
             width: 760px;
             padding-right: 49px;
-            .Menu{
-              display: flex;
-              flex-direction: column;
-              padding-top: 35.5px;
-
-              a{
-                font-family: 'Roboto';
-                font-size: 14px;
-                line-height: 250%;
-                padding-left: 16px;
-                margin: 0;
-              }
-              a:first-child{
-                border-left: 4px solid #1890FF;
-              }
-            }
+            
             .add_button{
                 font-size: 14px;
                 line-height: 22px;
@@ -124,6 +126,9 @@
                     }
                     img{
                         margin-left: 10px;
+                    }
+                    .DeleteButton{
+                        cursor: pointer;
                     }
                    
                 }
@@ -248,10 +253,23 @@
                     
                 }
             }
+           
             .inputRow{
                 margin-top: 24px;
-                img{
+
+                .checked, .checkbox{
+                    cursor: pointer;
                     margin-right: 11.2px;
+                    -webkit-user-select: none; 
+                    -ms-user-select: none; 
+                    user-select: none;
+                }
+                .checkbox{
+                    width: 15px;
+                    height: 15px;
+                    border: 1px solid #DEDEDE;
+                    border-radius: 2px;
+
                 }
             }
           
@@ -262,6 +280,7 @@
             height: 42px;
             margin-top: 36px;
             border: none;
+            cursor: pointer;
             img{
                 margin-right: 10px;
             }

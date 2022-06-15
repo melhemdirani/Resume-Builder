@@ -232,14 +232,14 @@ export const Resume1_Data = {
             position: "Graphic Designer",
             sector: "Children & Education",
             startDate: "Sep 2016",
-            endDate: "Present"
+            endDate: "present"
         },
         {
             name: "Bidyanondo Foundation",
             position: "Graphic Designer",
             sector: "Children & Education",
             startDate: "Sep 2016",
-            endDate: "Present"
+            endDate: "present"
         },
     ],
     Language: [

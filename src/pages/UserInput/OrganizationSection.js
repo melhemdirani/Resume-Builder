@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import EditorContainer from "./EditorContainer";
 import DateInput from "./DateInput";
@@ -7,6 +7,9 @@ import checkbox from '../../assets/images/checkbox.svg';
 
 const OrganizationSection = ({data, onArrayChange, index}) => {
     let Organization = data.Organization
+    let SetPresentValue = Organization[index].endDate === "present" ? true : false
+    const [present, setPresent] = useState(SetPresentValue)
+    console.log("val",SetPresentValue)
     return(
         <div>
             <InputContainer 
@@ -47,8 +50,13 @@ const OrganizationSection = ({data, onArrayChange, index}) => {
                 startDate={Organization[index].startDate}
                 endDate={Organization[index].endDate}
                 arrayName="Organization" 
+                present={present}
+                setPresent={setPresent}
             />
-            <p className='flex inputRow'><img alt="" src={checkbox} /> I am currently working here </p>
+            <p className='flex inputRow' onClick={() => setPresent(!present)}>
+                {present ? <img alt="" src={checkbox} className="checked" /> : <span className='checkbox'/>}
+                I am currently working here 
+            </p>
         </div>
     )
 }

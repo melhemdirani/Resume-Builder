@@ -1,11 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import EditorContainer from "./EditorContainer";
 import DateInput from "./DateInput";
 import InputContainer from "./InputContainer";
 import checkbox from '../../assets/images/checkbox.svg';
 
+
 const WorkSection = ({data, onArrayChange, index}) => {
+
+    
+    let SetPresentValue = data.workExperience[index].endDate === "present" ? true : false
+    
+
+    const [present, setPresent] = useState(SetPresentValue)
+
     let workExperience = data.workExperience
     return(
         <div>
@@ -44,13 +52,18 @@ const WorkSection = ({data, onArrayChange, index}) => {
             <DateInput 
                 title="Start & End Date"  
                 onChange={onArrayChange}
+                present={present}
+                setPresent={setPresent}
                 index={index}
                 arrays={data.workExperience} 
                 startDate={workExperience[index].startDate}
                 endDate={workExperience[index].endDate}
                 arrayName="workExperience" 
             />
-            <p className='flex inputRow'><img alt="" src={checkbox} /> I am currently working here </p>
+            <p className='flex inputRow' onClick={() => setPresent(!present)}>
+                {present ? <img alt="" src={checkbox} className="checked" /> : <span className='checkbox'/>}
+                I am currently working here 
+            </p>
         </div>
     )
 }
