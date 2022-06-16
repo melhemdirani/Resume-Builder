@@ -68,7 +68,7 @@ export const EducationContainer = ({Education}) => {
 }
 export const CertificationContainer = ({Certification}) => {
     return  Certification.length > 0  && (
-        <div >
+        <div>
             <h3>
                 <img alt="" src={work} />
                 Certification

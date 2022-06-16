@@ -23,9 +23,11 @@
         margin-top: 75.45px;
         margin-right: 105px;
         top: 75px;
-        max-width: 432px;
+        width: 50%;
+        min-width: 430px;
         position: sticky;
-        
+        overflow-y: scroll;
+        overflow-x: visible !important;
     }
     .body{
         align-items: flex-start !important;

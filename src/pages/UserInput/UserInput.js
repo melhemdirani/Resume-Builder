@@ -54,7 +54,6 @@ function UserInput() {
     )
 
 
-    const [filledPersonal, setFilledPersonal] = useState(false)
     const [showPersonal, setShowPersonal] = useState(true)
     const [workIndex, setWorkIndex] = useState(data.workExperience.length)
     const [educationIndex, setEducationIndex] = useState(data.Education.length)
@@ -63,6 +62,7 @@ function UserInput() {
     const [orgIndex, setOrgIndex] = useState(data.Organization.length)
     const [langIndex, setLangIndex] = useState(data.Language.length)
     const [showAddSection, setShowAddSection] = useState(false)
+    const [n , setN ] = useState(651)
 
     const [text, setText] = useState(data.PersonalInfo.summary)
 
@@ -71,6 +71,16 @@ function UserInput() {
             return false
         } else return true
     }
+    let length = data.workExperience.length + data.Education.length + data.Certification.length
+
+    useEffect(()=>{
+        if(length > 7){
+            let difference =  length - 7
+
+            setN(651 + difference*50)
+        }
+        console.log("hi")
+    }, [length])
 
     const [showSections, setShowSections] = useState({
         workExperience: alternate(workIndex),
@@ -88,8 +98,8 @@ function UserInput() {
 
     const onPersonalChange = (e) => {
         
-        if(!filledPersonal){
-            setFilledPersonal(true)
+        if(!showPersonal){
+            setShowPersonal(true)
         }
         let {value, name } = e.target
 
@@ -114,21 +124,22 @@ function UserInput() {
         setFunction(variable + 1);
     }
     const generatePdf = () => {
-        const doc = new jsPDF("p", "px", [603, 612.0001]);
+        const doc = new jsPDF("p", "px", [600, n]);
        
         doc.setFont('Roboto-Regular', 'normal');
         
         doc.setFontSize(8);
         let height = doc.internal.pageSize.getHeight();
         let width = doc.internal.pageSize.getWidth();
-        doc.html(ReactDOMServer.renderToString(<Resume1 data={data} height={height} showSections={showSections} />), {
+        doc.html(ReactDOMServer.renderToString(<Resume1 data={data} height={height} width={`calc(${width} - 100px)`} showSections={showSections} />), {
           x: 0,
           y: 0,
           callback: function (doc) {
+            doc.deletePage(2)
             doc.save('sample.pdf');
           },
           width: 650, // <- here
-          windowWidth: 650 // <- here
+          windowWidth: 650, // <- here
         });
     }
     useEffect(() => {
@@ -403,7 +414,7 @@ function UserInput() {
                     </div>
                 </div>
                 <div className='resumes'>
-                    <Resume1 data={data} filledPersonal={filledPersonal} grid={"40% 60%"} width={"100%"} showSections={showSections} height="632px"/>
+                    <Resume1 data={data}  grid={"40% 60%"} width={"450px"} showSections={showSections} height="632px"/>
                 </div>
             </div>
         </div>

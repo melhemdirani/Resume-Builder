@@ -15,8 +15,7 @@ import {
 import './Resume1.styles.scss'
 
 
-function Resume1({data, filledPersonal, grid, height, width, showSections}) { 
-
+function Resume1({data, grid, height, width, showSections}) { 
     const CheckAvailabilty = (obj) => {
         if(typeof obj != "undefined"){
             return true
@@ -27,7 +26,7 @@ function Resume1({data, filledPersonal, grid, height, width, showSections}) {
     return (
         <div 
             className='Resume1_Container' 
-            style={{gridTemplateColumns: grid, maxHeight: height ? height : "100%", maxWidth: width, height: height}} 
+            style={{gridTemplateColumns: grid,  width: width, height: height}} 
             >
             <div className='c1'>
                 {CheckAvailabilty(PersonalInfo.profile) && <img alt='' src={PersonalInfo.profile} className='profile'/> }
@@ -40,7 +39,7 @@ function Resume1({data, filledPersonal, grid, height, width, showSections}) {
                 : ""
                 }
             </div>
-            <div className='c2'>
+            <div className='c2' >
                     <div className='row1'>
                         <PersonalContainer PersonalInfo={PersonalInfo} />
                         <SocialMediaContainer PersonalInfo={PersonalInfo} />
