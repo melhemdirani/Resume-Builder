@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/Resume-Builder/static/css/main.14820768.css",
-    "main.js": "/Resume-Builder/static/js/main.12724b83.js",
+    "main.css": "/Resume-Builder/static/css/main.15bf198e.css",
+    "main.js": "/Resume-Builder/static/js/main.0e056059.js",
     "static/js/498.65001eb7.chunk.js": "/Resume-Builder/static/js/498.65001eb7.chunk.js",
     "static/js/703.d1db722d.chunk.js": "/Resume-Builder/static/js/703.d1db722d.chunk.js",
     "static/js/573.faa9d885.chunk.js": "/Resume-Builder/static/js/573.faa9d885.chunk.js",
@@ -42,14 +42,15 @@
     "static/media/backarrow.svg": "/Resume-Builder/static/media/backarrow.7f4efd34f2a387a8d3954e49fed52ceb.svg",
     "static/media/info.svg": "/Resume-Builder/static/media/info.e9d88139006a8cea177611d4dcf0c2b7.svg",
     "static/media/calendarTop.svg": "/Resume-Builder/static/media/calendarTop.d9d6927914ef47fcd1214d6eb6a1241b.svg",
-    "main.14820768.css.map": "/Resume-Builder/static/css/main.14820768.css.map",
-    "main.12724b83.js.map": "/Resume-Builder/static/js/main.12724b83.js.map",
+    "static/media/closeButton.svg": "/Resume-Builder/static/media/closeButton.f8104e3460a874c3200dc0840bf9dbe4.svg",
+    "main.15bf198e.css.map": "/Resume-Builder/static/css/main.15bf198e.css.map",
+    "main.0e056059.js.map": "/Resume-Builder/static/js/main.0e056059.js.map",
     "498.65001eb7.chunk.js.map": "/Resume-Builder/static/js/498.65001eb7.chunk.js.map",
     "703.d1db722d.chunk.js.map": "/Resume-Builder/static/js/703.d1db722d.chunk.js.map",
     "573.faa9d885.chunk.js.map": "/Resume-Builder/static/js/573.faa9d885.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.14820768.css",
-    "static/js/main.12724b83.js"
+    "static/css/main.15bf198e.css",
+    "static/js/main.0e056059.js"
   ]
 }
