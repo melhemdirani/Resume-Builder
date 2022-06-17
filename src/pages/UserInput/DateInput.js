@@ -40,7 +40,6 @@ const Calendar = ({selectedMonth, setSelectedMonth, selectedYear, setSelectedYea
 
 const DatePicker = ({title, month, onChange, arrayName, arrays, index, date, present, setPresent}) => {
 
-console.log(date)
     const [selectedMonth, setSelectedMonth] = useState(`${month}`)
     const [selectedYear, setSelectedYear] = useState(2020)
     const [startRender, setStartRender] = useState(`${date}`)

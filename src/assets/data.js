@@ -138,19 +138,26 @@ export const Resume1_Data = {
             title: "Business Development Manager",
             company: "AirState Solutions",
             startDate: "Apr 2018",
-            endDate: "Jan 2020"
+            endDate: "Jan 2020",
+            type: "",
+            location: "",
         },
         {
             title: "Business Development Manager",
             company: "AirState Solutions",
             startDate: "Apr 2018",
-            endDate: "Jan 2020"
+            endDate: "Jan 2020",
+            type: "",
+            location: "",
+
         },
         {
             title: "Business Development Manager",
             company: "AirState Solutions",
             startDate: "Apr 2018",
-            endDate: "Jan 2020"
+            endDate: "Jan 2020",
+            type: "",
+            location: ""
         }
     ],
     Education: [

@@ -23,7 +23,7 @@
         margin-top: 75.45px;
         margin-right: 105px;
         top: 75px;
-        width: 50%;
+        width: 500px;
         min-width: 430px;
         position: sticky;
         overflow-y: scroll;
@@ -107,6 +107,7 @@
                 border: none;
                 background: transparent;
                 color: #1890FF;
+                cursor: pointer;
                 margin-top: 24px;
             }
             label{
@@ -164,6 +165,7 @@
                         width: 258px;
                         padding: 0 9px;
                         .rectangle{
+                            cursor: pointer;
                             width: 45.23px;
                             height: 22px;
                         }

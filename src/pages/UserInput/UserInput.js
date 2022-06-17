@@ -3,6 +3,7 @@ import { jsPDF } from "jspdf";
 import ReactDOMServer from "react-dom/server";
 import { EditorState, convertToRaw, ContentState } from 'draft-js'
 
+
 import arrow from '../../assets/images/backarrow.svg';
 import info from '../../assets/images/info.svg';
 import edit from '../../assets/images/edit.svg';
@@ -63,6 +64,7 @@ function UserInput() {
     const [langIndex, setLangIndex] = useState(data.Language.length)
     const [showAddSection, setShowAddSection] = useState(false)
     const [n , setN ] = useState(651)
+    const [y , setY ] = useState(651)
 
     const [text, setText] = useState(data.PersonalInfo.summary)
 
@@ -76,12 +78,34 @@ function UserInput() {
     useEffect(()=>{
         if(length > 7){
             let difference =  length - 7
-
             setN(651 + difference*50)
         }
-        console.log("hi")
     }, [length])
 
+    useEffect(()=>{
+        let personalLength = data.PersonalInfo.summary.length*0.04
+
+        let textLength = data.PersonalInfo.summary.length
+        if(textLength > 870){
+            setY(y + personalLength)
+        }
+        if(data.Organization.length > 3){
+            let difference =  length - 3
+            setY(y + difference*25)
+        }
+        if(data.Language.length > 6){
+            let difference =  data.Language.length - 6
+            setY(y + difference*15)
+        }
+        if(data.Skills.length > 8){
+            let difference =  data.Skills.length  - 6
+            setY(y + difference*10)
+        }
+     
+    }, [data.PersonalInfo.summary, data.Organization.length, data.Language.length,  data.Skills.length ])
+
+
+   
     const [showSections, setShowSections] = useState({
         workExperience: alternate(workIndex),
         Education: alternate(educationIndex),
@@ -123,8 +147,14 @@ function UserInput() {
         arrayName.push(arrayName[0]);
         setFunction(variable + 1);
     }
+
+    const biggerValue = (a, b) => {
+        if ( a > b) {
+            return a
+        } else return b
+    }
     const generatePdf = () => {
-        const doc = new jsPDF("p", "px", [600, n]);
+        const doc = new jsPDF("p", "px", [600, biggerValue(n, y)]); // compare which height is bigger
        
         doc.setFont('Roboto-Regular', 'normal');
         
@@ -203,11 +233,6 @@ function UserInput() {
             })
         )
     }
-    useEffect(() => {
-        console.log("personal",data.PersonalInfo)
-        console.log("new",data.PersonalInfo)
-
-    }, [data.PersonalInfo])
     return (
 
     <div className='UserInput_Container' style={showAddSection ? { marginTop: "-100vh" } : {margin: "0"}}>
@@ -400,9 +425,9 @@ function UserInput() {
                                     )}
                                     <button 
                                     className='add_button' 
-                                    onClick={() => addMore(data.Organization, setOrgIndex, orgIndex)}
+                                    onClick={() => addMore(data.Language, setLangIndex, langIndex)}
                                     > 
-                                        + Add More Organization
+                                        + Add More Language
                                     </button>
                                 </div>
                             }

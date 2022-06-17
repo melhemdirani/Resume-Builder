@@ -9,7 +9,6 @@ const OrganizationSection = ({data, onArrayChange, index}) => {
     let Organization = data.Organization
     let SetPresentValue = Organization[index].endDate === "present" ? true : false
     const [present, setPresent] = useState(SetPresentValue)
-    console.log("val",SetPresentValue)
     return(
         <div>
             <InputContainer 

@@ -15,10 +15,16 @@ export default function InputContainer({title, large, placeholder, type, onChang
             </label>
             {
                 type === "select" 
-                ? <select onChange={onChange}>
-                    <option>
-                        Please Select
-                    </option>
+                ? <select name={name} onChange={(e) => onChange(e, arrays, arrayName, index)} value={value}>
+                    <option selected  hidden> Please Select</option>
+                    <option> Full-time </option>
+                    <option> Part-time </option>
+                    <option> Self-employed </option>
+                    <option> Freelance </option>
+                    <option> Contract</option>
+                    <option> Internship </option>
+                    <option> Apprenticeship </option>
+                    <option> Seasonal </option>
                 </select>
                 : type === "level" ?
                 <div className='skillLevel'>

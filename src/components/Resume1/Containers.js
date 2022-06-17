@@ -28,7 +28,10 @@ export const WorkContainer = ({workExperience}) => {
                         <h4>
                             {experience.title}
                         </h4>
-                        <p>{experience.company} { experience.location && <span>-  {experience.location} </span>}</p>
+                        <p>
+                            {experience.type}
+                        </p>
+                        <p>{experience.company} {experience.location && experience.company && "-"} {experience.location}</p>
                         {(experience.startDate || experience.endDate ) && <p>{experience.startDate} - {experience.endDate}</p>}
                     </div>
                 )
@@ -145,7 +148,7 @@ const Skill = ({n}) => {
 export const SkillsContainer = ({Skills}) => {
 
     return(
-        <div className='Skills_Container'>
+        <div className='Skills_Container' >
             <h3>
                 <img alt="" src={skill} />
                 Work Experience
