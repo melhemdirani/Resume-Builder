@@ -98,9 +98,14 @@ export default  function ImageCropper () {
               onChange={(e, zoom) => setZoom(zoom)}
             />
           </div>
-          <button onClick={(e) => onSaveClick(e)} className="save">
-            save
-          </button>
+          <div className='settings'>
+            <button onClick={(e) => onSaveClick(e)} className="save">
+              save
+            </button>
+            <button onClick={() => setCropper(false)} className="save">
+              Cancel
+            </button>
+          </div>
         </div>
     </div>
 

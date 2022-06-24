@@ -306,6 +306,9 @@
                     .imageIcon{
                         width: 66px;
                         height: 66px;
+                        .delete{
+                            cursor: pointer;
+                        }
                     }
                     .custom-file-input2::-webkit-file-upload-button {
                         visibility: hidden;

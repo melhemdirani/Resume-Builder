@@ -51,12 +51,11 @@
         background-color: black;
 
     }
-    .string{
-        width: 50%;
-
-    }
-    .cropArea{
-        height: 200px;
-
+    .settings{
+        display: flex;
+        flex-direction: column;
+        button{
+            margin-bottom: 10px;
+        }
     }
 }

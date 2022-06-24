@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 import edit from '../../assets/images/editmini.svg';
-import res from '../../assets/images/Resume6.png';
+import deleteIcon from '../../assets/images/deleteMini.svg';
 import infoCircle from '../../assets/images/InfoCircle.svg';
 import ImageCropper from '../../components/ImageCropper/ImageCropper';
 import InputContainer from './InputContainer';
@@ -24,6 +24,12 @@ function PersonalInfoSection({onPersonalChange, data }) {
 
     let PersonalInfo = data.PersonalInfo
 
+    const onDelete = () => {
+        let event = {target: {name: "profile", value: "" }}
+        onPersonalChange(event)
+        setUploaded(false)
+
+    }
     const onInputChange = (e) => {
         setImage( URL.createObjectURL(e.target.files[0]))
         setUploaded(true)
@@ -47,14 +53,18 @@ function PersonalInfoSection({onPersonalChange, data }) {
                     <div  className='flex photoAdd'>
                         <div className='uploadedContainer'>
                             <div 
-                                className='imageIcon' 
+                                className='imageIcon flex' 
                                 style={{
-                                    backgroundImage: `url(${image})`, 
+                                    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)) , url(${image})`, 
                                     backgroundSize: "contain", 
                                     backgroundPosition:"50% 50%", 
-                                    backgroundRepeat: "no-repeat"
-                                    }}
-                            />
+                                    backgroundRepeat: "no-repeat",
+                                }}
+                            >
+                                <img alt="" src={deleteIcon} className="delete" onClick={() => onDelete()}/>
+                                
+                            </div>
+
                         </div>
                         <span onClick={() => onEditClick ()} className='Edit flex'>
                             Edit Photo
