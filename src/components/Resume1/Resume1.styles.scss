@@ -4,6 +4,9 @@
     grid-template-columns: 30% 58%;
     padding-bottom: 20px;
     letter-spacing: -.05px    !important;
+    .wrap{
+        flex-wrap: wrap;
+    }
     h3{
         color: #FF7246;
         font-size: 9.16px;
@@ -101,6 +104,13 @@
                     margin-top: 9.16px;
                     margin-bottom: 0;
                 }
+                .additional{
+                    justify-content: flex-start;
+                    .place{
+                        margin-right: 3px;
+                    }
+                }
+
             }
             .SocialMedia_Container{
                 display: flex;

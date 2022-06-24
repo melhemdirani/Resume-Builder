@@ -213,6 +213,8 @@ export const Resume1_Data = {
         twitter: "ikayes.design",
         phone: "+8801631455383",
         profile: resume1_profile,
+        additionalInfo: {}
+        
     },
     Skills: [
         {

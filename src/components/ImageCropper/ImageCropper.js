@@ -25,7 +25,6 @@ export default  function ImageCropper () {
         image,
         croppedAreaPixels,
       )
-      console.log('donee', { croppedImage })
       setCroppedImage(croppedImage)
      
       setImage(croppedImage)

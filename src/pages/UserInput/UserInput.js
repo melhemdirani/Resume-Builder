@@ -5,6 +5,7 @@ import { EditorState, convertToRaw, ContentState } from 'draft-js'
 
 
 import arrow from '../../assets/images/backarrow.svg';
+import additionalButton from '../../assets/images/additionalButton.svg';
 import info from '../../assets/images/info.svg';
 import edit from '../../assets/images/edit.svg';
 import eye from '../../assets/images/Eye.svg';
@@ -12,6 +13,7 @@ import Delete from '../../assets/images/delete.svg';
 import edit2 from '../../assets/images/edit2.svg';
 import addButton from '../../assets/images/addButton.svg';
 import checkbox from '../../assets/images/checkbox.svg';
+import Union from '../../assets/images/Union.svg';
 
 import './UserInput.styles.scss';
 import WorkSection from './WorkSection';
@@ -47,13 +49,28 @@ const TitleContainer = ({title, onDelete}) =>{
     )
 }
 
+const AdditionalButton = ({items, setShowAdditional, showAdditional}) => {
+    const {show, item} = items
+    const onButtonClick = () => {
+        setShowAdditional(items => ({
+            ...items,
+            [show]: true
+        }))
+    }
+   
+    return !showAdditional[show]  && (
+        <button className='AdditionalButtons flex' onClick={() => onButtonClick()}>
+            <img alt="" src={Union} />
+            <span>{item}</span>
+        </button>
+    )
+}
 
 
 
 function UserInput() {
 
-
-    const {data, setData, cropper}= useContext(EditorContext)
+    const {data, setData, cropper, showAdditional, setShowAdditional}= useContext(EditorContext)
 
     const [showPersonal, setShowPersonal] = useState(true)
     const [workIndex, setWorkIndex] = useState(data.workExperience.length)
@@ -64,6 +81,35 @@ function UserInput() {
     const [langIndex, setLangIndex] = useState(data.Language.length)
     const [showAddSection, setShowAddSection] = useState(false)
     const [hideLevel, setHideLevel] = useState(false)
+    const [showAddButtons, setShowAddButtons] = useState(false)
+
+    const AdditionalButtons = [
+        {
+            item: "Nationality", 
+            show: "Nationality"
+        },
+        {
+            item: "Country", 
+            show: "Country"
+        },
+        {
+            item: "Driving License", 
+            show: "DrivingLicense"
+        },
+        {
+            item: "Place Of Birth", 
+            show: "PlaceOfBirth"
+        },
+        {
+            item: "Date Of Birth", 
+            show: "DateOfBirth"
+        },
+        {
+            item: "Custom Field", 
+            show: "CustomField"
+        },
+    ]
+    
 
     const [n , setN ] = useState(651)
     const [y , setY ] = useState(651)
@@ -114,7 +160,8 @@ function UserInput() {
         Organization: alternate(orgIndex),
         Language: alternate(langIndex),
     })
-
+   
+  
 
 
     const {profSummary, setProfSummary}= useContext(EditorContext)
@@ -256,9 +303,7 @@ function UserInput() {
     }
 
     const moveCard = useCallback((dragIndex, hoverIndex) => {
-        console.log(dragIndex)
         let workExperience = data.workExperience
-        console.log("workExperience", workExperience)
         workExperience.map((item, index) => {
             if (item.order === dragIndex) {
                 return workExperience[index]["order"]= hoverIndex
@@ -268,7 +313,6 @@ function UserInput() {
 
             }
         });
-        console.log("workExperience", workExperience)
         setTimeout(() => {
             setData(data => ({
                 ...data,
@@ -278,6 +322,18 @@ function UserInput() {
       
     }, [ data.workExperience])
 
+    const AddPeronalInfo = ({item, value}) => {
+        setData(data => ({
+            ...data,
+            PersonalInfo:{ 
+                ...data.PersonalInfo, 
+                additionalInfo: {
+                    ...data.PersonalInfo.additionalInfo,
+                    [item]: value
+                }
+            }
+        }))
+    }
 
     return (
 
@@ -322,21 +378,44 @@ function UserInput() {
                     </div>
                     <div className='row2'>
                         <div className='Menu'>
-                            { showPersonal && <HashLink to='/editor/#personal'>Basic Info</HashLink>}
+                            {showPersonal && <HashLink to='/editor/#personal'>Basic Info</HashLink>}
                             {showPersonal && <HashLink to='/editor/#summary'>Summary</HashLink>}
                             {showSections.Skills && <HashLink to='/editor/#Skills'>Skills</HashLink>}
                             {showSections.workExperience && <HashLink to='/editor/#workExperience'>Work Experience</HashLink>}
-                           {showSections.Education && <HashLink to='/editor/#Education'>Education</HashLink>}
-                           {showSections.Certification && <HashLink to='/editor/#Certification'>Certification</HashLink>}
-                           {showSections.Organization && <HashLink to='/editor/#Organization'>Organization</HashLink>}
-                           {showSections.Language && <HashLink to='/editor/#Language'>Language</HashLink>}
+                            {showSections.Education && <HashLink to='/editor/#Education'>Education</HashLink>}
+                            {showSections.Certification && <HashLink to='/editor/#Certification'>Certification</HashLink>}
+                            {showSections.Organization && <HashLink to='/editor/#Organization'>Organization</HashLink>}
+                            {showSections.Language && <HashLink to='/editor/#Language'>Language</HashLink>}
                         </div>
                         <div className='inputs'>
                             {  showPersonal && 
                                 <div id='personal'>
                                     <TitleContainer title={"Personal Info"} onDelete={onPersonalDelete}/>
-                                    <PersonalInfoSection onPersonalChange={onPersonalChange} data={data}/>  
-                                   
+                                    <PersonalInfoSection 
+                                        onPersonalChange={onPersonalChange} 
+                                        data={data} 
+                                        AdditionalButtons={AdditionalButtons}
+                                    />
+                                    <button 
+                                        className='add_button' 
+                                        onClick={() => setShowAddButtons(!showAddButtons)}
+                                    > 
+                                        Add Additional Details
+                                        <img 
+                                            alt='' 
+                                            src={additionalButton}  
+                                            style={{transform: showAddButtons ? "rotate(180deg" : "rotate(0)" }}
+                                        />
+                                    </button>   
+                                    {showAddButtons &&
+                                        <div className='AdditionalButtons_Container'>
+                                            {
+                                                AdditionalButtons.map((item, i) => 
+                                                <AdditionalButton items={item} key={i} setShowAdditional={setShowAdditional} showAdditional={showAdditional}/>
+                                                )
+                                            }  
+                                        </div>
+                                    }
                                 </div>
                             }
                             {  showPersonal && 
@@ -344,7 +423,9 @@ function UserInput() {
                                     <TitleContainer title={"Professional Summary"} />
                                     <EditorContainer editorState={profSummary} setEditorState={setProfSummary} />
                                 </div>
+                                    
                             }
+                     
 
                             { showSections.workExperience &&
                                 <div id='workExperience'>

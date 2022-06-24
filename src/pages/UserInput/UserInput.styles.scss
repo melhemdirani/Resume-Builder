@@ -108,6 +108,22 @@
                 position: absolute;
                 margin: 18px 0 0 -25px;
             }
+            .AdditionalButtons_Container{
+                display: flex;
+                flex-wrap: wrap;
+                margin: 10px 0;
+                .AdditionalButtons{
+                    background-color: white;
+                    border: 1px solid #D9D9D9;
+                    padding: 10px;
+                    margin: 5px 12px 5px 0;
+                    cursor: pointer;
+                    img{
+                        margin-right: 10px;
+                    }
+                }
+            }
+           
             .WorkSection_Container{
                 width: 568px;
                 margin-left: -20px;
@@ -171,6 +187,9 @@
                 color: #1890FF;
                 cursor: pointer;
                 margin-top: 24px;
+                img{
+                    margin-left: 10px;
+                }
             }
             label{
                 font-family: 'Roboto';
@@ -339,7 +358,7 @@
            
             .inputRow{
                 margin-top: 24px;
-
+                flex-wrap: wrap;
                 .checked, .checkbox{
                     cursor: pointer;
                     margin-right: 11.2px;

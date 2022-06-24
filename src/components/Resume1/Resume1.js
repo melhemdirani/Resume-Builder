@@ -24,8 +24,6 @@ function Resume1({data, grid, height, width, showSections, hideLevel}) {
     }
     const {  Education, Certification, PersonalInfo, Skills, Organization, Language, workExperience} = data
     const { round }= useContext(EditorContext)
-    console.log("profile", PersonalInfo.profile)
-
     return (
         <div 
             className='Resume1_Container' 

@@ -106,6 +106,23 @@ export const PersonalContainer = ({PersonalInfo}) => {
             <p className='profession'>{PersonalInfo.profession}</p>
             <p className='summary'>{PersonalInfo.summary}</p>
             <p className='place'>{PersonalInfo.place}</p>
+            {
+                PersonalInfo.additionalInfo.length > 0 && PersonalInfo.additionalInfo.map((item, i) => 
+                    <div key={i}>
+                        {item.name}
+                        {item.value}
+                    </div>
+                )
+            }
+            <div className='flex wrap'>
+                {Object.keys(PersonalInfo.additionalInfo).map((keyName, i) => (
+                    <div key={i} className="additional flex">
+                       {keyName !== "Custom Field" && <p className='place'>{keyName}:</p> }
+                        <p className='place'>{PersonalInfo.additionalInfo[keyName]}</p>
+                    </div>
+                ))}
+            </div>
+         
         </div>
     )
 }

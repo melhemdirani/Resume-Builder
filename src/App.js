@@ -42,8 +42,33 @@ function App() {
 
   const [profSummary, setProfSummary]= useState(() => EditorState.createWithContent(content))
 
+  const [showAdditional, setShowAdditional] = useState({
+    Nationality: false,
+    Country: false,
+    DrivingLicense: false,
+    PlaceOfBirth : false,
+    DateOfBirth: false,
+    CustomField: false
+  })
+
+  const AddPeronalInfo = (e) => {
+    const {name, value } = e.target
+    setData(data => ({
+        ...data,
+        PersonalInfo:{ 
+            ...data.PersonalInfo, 
+            additionalInfo: {
+                ...data.PersonalInfo.additionalInfo,
+                [name]: value
+            }
+        }
+    }))
+  }
+
   const providerValue = useMemo(() => ({ 
     profSummary, 
+    showAdditional,
+    setShowAdditional,
     setProfSummary, 
     data, 
     setData, 
@@ -53,8 +78,11 @@ function App() {
     round, 
     setRound, 
     cropper, 
-    setCropper
+    setCropper,
+    AddPeronalInfo
   }), [
+    showAdditional,
+    setShowAdditional,
     profSummary, 
     setProfSummary, 
     data, 
@@ -64,6 +92,7 @@ function App() {
     onImageChange, 
     round, 
     setRound, 
+    AddPeronalInfo,
     setCropper
   ])
 

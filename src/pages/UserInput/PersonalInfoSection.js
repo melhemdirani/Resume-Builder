@@ -9,8 +9,8 @@ import { EditorContext } from '../../components/EditorContext';
 
 
 
-function PersonalInfoSection({onPersonalChange, data }) {
-    const {image, setCropper, setImage}= useContext(EditorContext)
+function PersonalInfoSection({onPersonalChange, data, AdditionalButtons }) {
+    const {image, setCropper, setImage, showAdditional, AddPeronalInfo}= useContext(EditorContext)
 
     const [uploaded, setUploaded] = useState(false)
      
@@ -132,6 +132,26 @@ function PersonalInfoSection({onPersonalChange, data }) {
                 name="phone" 
                 />
             </div>
+            <div className='flex space inputRow'>
+                {
+                    AdditionalButtons.map((button, i) => {
+                        const {show, item} = button
+                        return showAdditional[show] && (
+                            <div style={{margin: "10px 0"}} key={i}>
+                                <InputContainer 
+                                    title={item} 
+                                    name={item} 
+                                    placeholder='Ex:' 
+                                    onChange={AddPeronalInfo}  
+                                    value={PersonalInfo.additionalInfo.item} 
+                                />
+                            </div>
+                        )
+                    })
+                }
+
+            </div>
+            
             <InputContainer 
             title="Address"  
             large={true} 
