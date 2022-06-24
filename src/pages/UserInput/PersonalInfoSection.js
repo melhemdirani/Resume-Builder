@@ -1,21 +1,38 @@
-import React, { Profiler, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
-import addButton from '../../assets/images/addButton.svg';
+import edit from '../../assets/images/editmini.svg';
+import res from '../../assets/images/Resume6.png';
 import infoCircle from '../../assets/images/InfoCircle.svg';
+import ImageCropper from '../../components/ImageCropper/ImageCropper';
 import InputContainer from './InputContainer';
+import { EditorContext } from '../../components/EditorContext';
+
+
 
 function PersonalInfoSection({onPersonalChange, data }) {
-    const [image, setImage] = useState(data.PersonalInfo.profile)
+    const {image, setCropper, setImage}= useContext(EditorContext)
 
-    const onImageChange = (e) => {
-        setImage(URL.createObjectURL(e.target.files[0]))
-    }
+    const [uploaded, setUploaded] = useState(false)
+     
 
     useEffect(() => {
-        let event = {target: {name: "profile", value: image }}
-        onPersonalChange(event)
+        if(uploaded){
+            let event = {target: {name: "profile", value: image }}
+            onPersonalChange(event)
+        }
     }, [image])
+
     let PersonalInfo = data.PersonalInfo
+
+    const onInputChange = (e) => {
+        setImage( URL.createObjectURL(e.target.files[0]))
+        setUploaded(true)
+    } 
+
+    const onEditClick = () => {
+        setCropper(true)
+        window.scrollTo(0, 0)
+    }
     return (
         <div>
             <div className='flex space'>
@@ -26,11 +43,36 @@ function PersonalInfoSection({onPersonalChange, data }) {
                 value={PersonalInfo.profession} 
                 name="profession"
                 />
-                <div className='flex photoAdd'>
-                    <input type="file" name="image"  onChange={(e) => onImageChange(e)} className='custom-file-input' />
-                    <span>Add Photo</span>
-                    <img alt="" src={infoCircle} className='img'/>
-                </div>
+                { uploaded ?
+                    <div  className='flex photoAdd'>
+                        <div className='uploadedContainer'>
+                            <div 
+                                className='imageIcon' 
+                                style={{
+                                    backgroundImage: `url(${image})`, 
+                                    backgroundSize: "contain", 
+                                    backgroundPosition:"50% 50%", 
+                                    backgroundRepeat: "no-repeat"
+                                    }}
+                            />
+                        </div>
+                        <span onClick={() => onEditClick ()} className='Edit flex'>
+                            Edit Photo
+                            <img alt="" src={edit} />
+                        </span>
+                    </div>
+
+                    : 
+                    <div  className='flex photoAdd'>
+                        <input 
+                            type="file" 
+                            name="image"  
+                            onChange={(e) => onInputChange(e)} 
+                            className='custom-file-input'/>
+                        <span >Add Photo</span>
+                        <img alt="" src={infoCircle} className='img'/>
+                        </div>
+                }
             </div>
             <div className='flex space inputRow'>
                 <InputContainer 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
 import { jsPDF } from "jspdf";
 import ReactDOMServer from "react-dom/server";
 import { EditorState, convertToRaw, ContentState } from 'draft-js'
@@ -8,8 +8,8 @@ import arrow from '../../assets/images/backarrow.svg';
 import info from '../../assets/images/info.svg';
 import edit from '../../assets/images/edit.svg';
 import eye from '../../assets/images/Eye.svg';
-import edit2 from '../../assets/images/edit2.svg';
 import Delete from '../../assets/images/delete.svg';
+import edit2 from '../../assets/images/edit2.svg';
 import addButton from '../../assets/images/addButton.svg';
 import checkbox from '../../assets/images/checkbox.svg';
 
@@ -22,12 +22,13 @@ import { HashLink } from 'react-router-hash-link';
 import EducationSection from './EducationSection';
 import PersonalInfoSection from './PersonalInfoSection';
 import SkillsSection from './SkillsSection';
-import { Resume1_Data } from '../../assets/data';
 import CertificationSection from './CertificationSection';
 import OrganizationSection from './OrganizationSection';
 import EditorContainer from './EditorContainer';
 import LanguageSection from './LanguageSection';
 import AddSections from '../../components/AddSections/AddSections';
+import { EditorContext } from '../../components/EditorContext';
+import ImageCropper from '../../components/ImageCropper/ImageCropper';
 
 
 
@@ -48,12 +49,11 @@ const TitleContainer = ({title, onDelete}) =>{
 
 
 
+
 function UserInput() {
 
-    const [ data, setData ] = useState(
-        Resume1_Data
-    )
 
+    const {data, setData, cropper}= useContext(EditorContext)
 
     const [showPersonal, setShowPersonal] = useState(true)
     const [workIndex, setWorkIndex] = useState(data.workExperience.length)
@@ -63,6 +63,8 @@ function UserInput() {
     const [orgIndex, setOrgIndex] = useState(data.Organization.length)
     const [langIndex, setLangIndex] = useState(data.Language.length)
     const [showAddSection, setShowAddSection] = useState(false)
+    const [hideLevel, setHideLevel] = useState(false)
+
     const [n , setN ] = useState(651)
     const [y , setY ] = useState(651)
 
@@ -84,7 +86,6 @@ function UserInput() {
 
     useEffect(()=>{
         let personalLength = data.PersonalInfo.summary.length*0.04
-
         let textLength = data.PersonalInfo.summary.length
         if(textLength > 870){
             setY(y + personalLength)
@@ -101,7 +102,6 @@ function UserInput() {
             let difference =  data.Skills.length  - 6
             setY(y + difference*10)
         }
-     
     }, [data.PersonalInfo.summary, data.Organization.length, data.Language.length,  data.Skills.length ])
 
 
@@ -115,9 +115,9 @@ function UserInput() {
         Language: alternate(langIndex),
     })
 
-    const content = ContentState.createFromText(text);
 
-    const [profSummary, setProfSummary]= useState(() => EditorState.createWithContent(content))
+
+    const {profSummary, setProfSummary}= useContext(EditorContext)
 
 
     const onPersonalChange = (e) => {
@@ -144,7 +144,14 @@ function UserInput() {
     }
 
     const addMore = (arrayName, setFunction, variable ) => {
-        arrayName.push(arrayName[0]);
+        if(arrayName === data.workExperience){
+            let arr = arrayName[arrayName.length - 1]
+            let newArr = {...arr}
+            newArr.order = arr.order + 1
+            arrayName.push(newArr)
+        }else{
+            arrayName.push(arrayName[arrayName.length - 1]);
+        }
         setFunction(variable + 1);
     }
 
@@ -155,13 +162,11 @@ function UserInput() {
     }
     const generatePdf = () => {
         const doc = new jsPDF("p", "px", [600, biggerValue(n, y)]); // compare which height is bigger
-       
         doc.setFont('Roboto-Regular', 'normal');
-        
         doc.setFontSize(8);
         let height = doc.internal.pageSize.getHeight();
         let width = doc.internal.pageSize.getWidth();
-        doc.html(ReactDOMServer.renderToString(<Resume1 data={data} height={height} width={`calc(${width} - 100px)`} showSections={showSections} />), {
+        doc.html(ReactDOMServer.renderToString(<Resume1 data={data} height={height} width={`calc(${width} - 100px)`} showSections={showSections} hideLevel={hideLevel}/>), {
           x: 0,
           y: 0,
           callback: function (doc) {
@@ -213,7 +218,7 @@ function UserInput() {
     }
    
     const onArrayDelete = (setFunction,  Array, arrayName) => {
-        setFunction(0);
+        setFunction(0)
         setData(data => ({
             ...data,
             [Array]: [newObj(arrayName)]
@@ -223,6 +228,22 @@ function UserInput() {
             [Array]: false
         }))
     }
+    const onExperienceDelete = (i) => {
+        if(data.workExperience.length < 2 ){
+            return onArrayDelete(setWorkIndex, "workExperience", data.workExperience)
+        } else{
+            let newWorkExperience = data.workExperience
+            let newArr= newWorkExperience.filter(function(value, index, arr){ 
+                return index !== i;
+            });
+            setWorkIndex(workIndex - 1)
+            setData(data => ({
+                ...data,
+                workExperience: newArr
+            }))
+        }
+    }   
+ 
 
     const addDetail = (setIndex, array) => {
         setIndex(1)
@@ -233,6 +254,31 @@ function UserInput() {
             })
         )
     }
+
+    const moveCard = useCallback((dragIndex, hoverIndex) => {
+        console.log(dragIndex)
+        let workExperience = data.workExperience
+        console.log("workExperience", workExperience)
+        workExperience.map((item, index) => {
+            if (item.order === dragIndex) {
+                return workExperience[index]["order"]= hoverIndex
+            }
+            if (item.order === hoverIndex) {
+                return workExperience[index]["order"]= dragIndex
+
+            }
+        });
+        console.log("workExperience", workExperience)
+        setTimeout(() => {
+            setData(data => ({
+                ...data,
+                workExperience: workExperience
+            }))
+        }, 300)
+      
+    }, [ data.workExperience])
+
+
     return (
 
     <div className='UserInput_Container' style={showAddSection ? { marginTop: "-100vh" } : {margin: "0"}}>
@@ -261,6 +307,8 @@ function UserInput() {
                     </button>
                 </div>
             </div>
+            {cropper && <ImageCropper image={data.PersonalInfo.profile} /> }
+
             <div className='flex body space'>
                 <div className='c1'>
                     <div className='row1'>
@@ -287,14 +335,14 @@ function UserInput() {
                             {  showPersonal && 
                                 <div id='personal'>
                                     <TitleContainer title={"Personal Info"} onDelete={onPersonalDelete}/>
-                                    <PersonalInfoSection onPersonalChange={onPersonalChange} data={data} />  
+                                    <PersonalInfoSection onPersonalChange={onPersonalChange} data={data}/>  
                                    
                                 </div>
                             }
                             {  showPersonal && 
                                 <div id='summary'>
                                     <TitleContainer title={"Professional Summary"} />
-                                    <EditorContainer editorState={profSummary} setEditorState={setProfSummary}/>
+                                    <EditorContainer editorState={profSummary} setEditorState={setProfSummary} />
                                 </div>
                             }
 
@@ -310,12 +358,17 @@ function UserInput() {
                                             )
                                         }
                                     />
-                                    { [...Array(workIndex)].map((e, index) => 
+                                    {
+                                        data.workExperience.sort(function(a, b){return a.order-b.order}).map((item, index) => 
                                         <WorkSection 
-                                        data={data}  
-                                        onArrayChange={onArrayChange} 
-                                        index={index} 
-                                        key={index}  
+                                            data={data}
+                                            workExperience={data.workExperience}  
+                                            onArrayChange={onArrayChange} 
+                                            index={index} 
+                                            key={index} 
+                                            id={item.order} 
+                                            onExperienceDelete={onExperienceDelete}
+                                            moveCard={moveCard}
                                         />
                                     )}
                                     <button 
@@ -338,9 +391,9 @@ function UserInput() {
                                             )
                                         }
                                     />
-                                    { [...Array(educationIndex)].map((e, index) => 
+                                    { data.Education.map((e, index) => 
                                         <EducationSection 
-                                        data={data}  
+                                        Education={data.Education}  
                                         onArrayChange={onArrayChange} 
                                         index={index} 
                                         key={index}  
@@ -363,6 +416,7 @@ function UserInput() {
                                         data={data} 
                                         j={index}
                                         key={index}
+                                        hideLevel={hideLevel}
                                     />
                                     )}
                                     <button 
@@ -371,7 +425,10 @@ function UserInput() {
                                     > 
                                         + Add More Skill
                                     </button>
-                                    <p className='flex inputRow'><img alt="" src={checkbox} /> Hide Level </p>
+                                    <p className='flex inputRow' onClick={() => setHideLevel(!hideLevel)}>
+                                        {hideLevel ? <img alt="" src={checkbox} className="checked" /> : <span className='checkbox'/>}
+                                        Hide Level
+                                    </p>
                                 </div>
                             }
                             {   showSections.Certification &&
@@ -439,7 +496,7 @@ function UserInput() {
                     </div>
                 </div>
                 <div className='resumes'>
-                    <Resume1 data={data}  grid={"40% 60%"} width={"450px"} showSections={showSections} height="632px"/>
+                        <Resume1 data={data}  grid={"40% 60%"} width={"450px"} showSections={showSections} height="632px" hideLevel={hideLevel}/>
                 </div>
             </div>
         </div>

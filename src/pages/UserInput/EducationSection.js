@@ -1,14 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import EditorContainer from "./EditorContainer";
 import DateInput from "./DateInput";
 import InputContainer from "./InputContainer";
 import checkbox from '../../assets/images/checkbox.svg';
 
-const EducationSection = ({data, onArrayChange, index}) => {
-    let Education = data.Education
- 
-
+const EducationSection = ({Education, onArrayChange, index}) => {
+    let SetPresentValue = Education[index].endDate === "present" ? true : false
+    const [present, setPresent] = useState(SetPresentValue)
     return(
         <div>
             <InputContainer 
@@ -16,7 +14,7 @@ const EducationSection = ({data, onArrayChange, index}) => {
             large={true} 
             onChange={onArrayChange} 
             value={Education[index].university} 
-            arrays={data.Education} 
+            arrays={Education} 
             index={index}
             arrayName="Education" 
             name="university" 
@@ -27,7 +25,7 @@ const EducationSection = ({data, onArrayChange, index}) => {
                 onChange={onArrayChange} 
                 value={Education[index].title} 
                 index={index}
-                arrays={data.Education} 
+                arrays={Education} 
                 arrayName="Education" 
                 name="title" 
                 />
@@ -36,7 +34,7 @@ const EducationSection = ({data, onArrayChange, index}) => {
                 onChange={onArrayChange} 
                 value={Education[index].field} 
                 index={index}
-                arrays={data.Education} 
+                arrays={Education} 
                 arrayName="Education" 
                 name="field" 
                 />
@@ -47,7 +45,7 @@ const EducationSection = ({data, onArrayChange, index}) => {
                 onChange={onArrayChange} 
                 value={Education[index].CGPA} 
                 index={index}
-                arrays={data.Education} 
+                arrays={Education} 
                 arrayName="Education" 
                 name="CGPA" 
                 />
@@ -56,8 +54,8 @@ const EducationSection = ({data, onArrayChange, index}) => {
                 onChange={onArrayChange} 
                 value={Education[index].CGPAMax} 
                 index={index}
-                arrays={data.Education} 
-                arrayName="CGPAMax" 
+                arrays={Education} 
+                arrayName="Education"  
                 name="CGPAMax" 
                 />
             </div>
@@ -65,13 +63,17 @@ const EducationSection = ({data, onArrayChange, index}) => {
                 title="Start & End Date"
                 onChange={onArrayChange}
                 index={index}
-                arrays={data.Education} 
+                present={present}
+                setPresent={setPresent}
+                arrays={Education} 
                 startDate={Education[index].startDate}
                 endDate={Education[index].endDate}
                 arrayName="Education" 
             />
-            <p className='flex inputRow'><img alt="" src={checkbox} /> I am currently study here </p>
-            <InputContainer title="Location" large={true} placeholder='example' />
+            <p className='flex inputRow' onClick={() => setPresent(!present)}>
+                {present ? <img alt="" src={checkbox} className="checked" /> : <span className='checkbox'/>}
+                I am currently studying here 
+            </p>
         </div>
     )
 }

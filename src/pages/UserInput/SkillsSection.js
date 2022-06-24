@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import InputContainer from "./InputContainer";
 
 
-function SkillsSection({onArrayChange, data, j}) {
+function SkillsSection({onArrayChange, data, j, hideLevel}) {
     
     const [skillLevel, setSkillLevel] = useState(data.Skills[j].value)
 
@@ -25,13 +25,14 @@ function SkillsSection({onArrayChange, data, j}) {
             name="name" 
             index={j}
         />
-        <InputContainer 
+        {!hideLevel && <InputContainer 
             title="Level - Novice" 
             placeholder='example' 
             type="level"  
             onSkillClick={onSkillClick} 
             skillLevel={skillLevel}
-        />
+            hideLevel={hideLevel}
+        />}
     </div>
   )
 }

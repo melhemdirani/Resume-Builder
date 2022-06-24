@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useContext } from 'react';
 import { 
     WorkContainer, 
     EducationContainer, 
@@ -13,23 +13,26 @@ import {
 
 
 import './Resume1.styles.scss'
+import { EditorContext } from '../../components/EditorContext';
 
 
-function Resume1({data, grid, height, width, showSections}) { 
+function Resume1({data, grid, height, width, showSections, hideLevel}) { 
     const CheckAvailabilty = (obj) => {
         if(typeof obj != "undefined"){
             return true
         } else return false
     }
-
     const {  Education, Certification, PersonalInfo, Skills, Organization, Language, workExperience} = data
+    const { round }= useContext(EditorContext)
+    console.log("profile", PersonalInfo.profile)
+
     return (
         <div 
             className='Resume1_Container' 
             style={{gridTemplateColumns: grid,  width: width, height: height}} 
             >
             <div className='c1'>
-                {CheckAvailabilty(PersonalInfo.profile) && <img alt='' src={PersonalInfo.profile} className='profile'/> }
+               <img alt='' src={PersonalInfo.profile} className='profile' style={{borderRadius: round ? "50%" : "0"}} /> 
                 { (showSections.workExperience || showSections.Education || showSections.Certification) ?
                     <div className='info'>
                         { showSections.workExperience  && <WorkContainer  workExperience={workExperience}  />} 
@@ -44,7 +47,7 @@ function Resume1({data, grid, height, width, showSections}) {
                         <PersonalContainer PersonalInfo={PersonalInfo} />
                         <SocialMediaContainer PersonalInfo={PersonalInfo} />
                     </div>
-                { showSections.Skills && <SkillsContainer Skills={Skills}/> }
+                { showSections.Skills && <SkillsContainer Skills={Skills} hideLevel={hideLevel}/> }
                 { showSections.Organization &&<OrganizationContainer organization={Organization}/> }
                 { showSections.Language && <LanguageContainer language={Language}/> }
             </div>

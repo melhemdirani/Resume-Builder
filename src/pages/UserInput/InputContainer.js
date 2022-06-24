@@ -16,7 +16,7 @@ export default function InputContainer({title, large, placeholder, type, onChang
             {
                 type === "select" 
                 ? <select name={name} onChange={(e) => onChange(e, arrays, arrayName, index)} value={value}>
-                    <option selected  hidden> Please Select</option>
+                    <option defaultValue  hidden> Please Select</option>
                     <option> Full-time </option>
                     <option> Part-time </option>
                     <option> Self-employed </option>

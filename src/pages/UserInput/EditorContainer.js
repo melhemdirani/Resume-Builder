@@ -1,4 +1,7 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef } from 'react';
+
+import './UserInput.styles.scss'
+
 
 import { EditorState, RichUtils, convertToRaw } from 'draft-js'
 import Editor, { createEditorStateWithText } from '@draft-js-plugins/editor';
@@ -11,17 +14,22 @@ import {
   BoldButton,
   UnderlineButton,
   CodeButton,
-  HeadlineOneButton,
-  HeadlineTwoButton,
-  HeadlineThreeButton,
+  AlignTextRightButton,
+  AlignTextCenterButton,
+  AlignTextLeftButton,
   UnorderedListButton,
   OrderedListButton,
   BlockquoteButton,
   CodeBlockButton,
 } from '@draft-js-plugins/buttons';
 
-const EditorContainer = ({editorState, setEditorState}) => {
+import Expand from '../../assets/images/expand.svg'
+import escape from '../../assets/images/escape.svg'
+import { HashLink } from 'react-router-hash-link';
+
+const EditorContainer = ({editorState, setEditorState, expand}) => {
   const textAlignmentPlugin = createTextAlignmentPlugin();
+  const [textAlign, setTextAlign] = useState('left')
 
   const [{ plugins, Toolbar }] = useState(() => {
     const toolbarPlugin = createStaticToolbarPlugin();
@@ -36,15 +44,17 @@ const EditorContainer = ({editorState, setEditorState}) => {
 
   const editorRef = useRef(null);
 
+  
   return (
     <div
       className="editor"
+      style={expand ? {width: "100vw", height: "100vh", marginTop: "-1px"} : {width: "568px", height: "171px"}}
       onClick={() => editorRef.current && editorRef.current.focus()}
     >
       <Toolbar>
         {
         (externalProps) => (
-          <div className='flex toolbar'>
+          <div className='flex toolbar' style={expand && {paddingLeft: "430px", paddingTop: "43px"}}>
             <BoldButton {...externalProps} />
             <ItalicButton {...externalProps} />
             <UnderlineButton {...externalProps} />
@@ -54,16 +64,38 @@ const EditorContainer = ({editorState, setEditorState}) => {
             <OrderedListButton {...externalProps} />
             <BlockquoteButton {...externalProps} />
             <CodeBlockButton {...externalProps} />
-            <textAlignmentPlugin.TextAlignment {...externalProps} />
+            <div onMouseDown={() => setTextAlign("left")}>
+              <AlignTextLeftButton {...externalProps} />
+            </div>
+            <div onMouseDown={() => setTextAlign("center")}>
+              <AlignTextCenterButton {...externalProps} />
+            </div>
+            <div onMouseDown={() => setTextAlign("right")}>
+              <AlignTextRightButton {...externalProps} />
+            </div>
+            {
+              expand ? 
+
+              <HashLink to="/editor">
+                <img alt="" src={escape} />
+              </HashLink>
+              :
+              <HashLink to="/ExpandedEditor">
+                <img alt="" src={Expand} />
+              </HashLink>
+            }
           </div>
         )}
       </Toolbar>
-      <Editor
-        editorState={editorState}
-        onChange={(newEditorState) => setEditorState(newEditorState)}
-        plugins={plugins}
-        ref={(editor) => (editorRef.current = editor)}
-      />
+      <div style={{padding: "5px", textAlign: textAlign}}>
+        <Editor
+          editorState={editorState}
+          onChange={(newEditorState) => setEditorState(newEditorState)}
+          plugins={plugins}
+          ref={(editor) => (editorRef.current = editor)}
+        />
+      </div>
+    
     </div>
   );
 };

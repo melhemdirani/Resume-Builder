@@ -6,6 +6,7 @@ import twitter from '../../assets/images/twitter.svg';
 import email from '../../assets/images/email.svg';
 import phone from '../../assets/images/phone.svg';
 import skill from '../../assets/images/skill.png';
+import { EditorContext } from '../../components/EditorContext';
 
 const CheckAvailabilty = (obj) => {
     if(typeof obj != null){
@@ -98,6 +99,7 @@ export const CertificationContainer = ({Certification}) => {
 }
 
 export const PersonalContainer = ({PersonalInfo}) => {
+    
     return(
         <div className='PersonalContainer'>
             <h2>{PersonalInfo.Name} {" "} {PersonalInfo.Lastname }</h2>
@@ -145,20 +147,20 @@ const Skill = ({n}) => {
     )
 }
 
-export const SkillsContainer = ({Skills}) => {
+export const SkillsContainer = ({Skills, hideLevel}) => {
 
     return(
         <div className='Skills_Container' >
             <h3>
                 <img alt="" src={skill} />
-                Work Experience
+                Skills
             </h3>
             {
                 Skills.map((skill, i) => {
                     return (skill.name || skill.value) && (
                         <div key={i} className='flex'>
                             {skill.name && <p>{skill.name}</p>}
-                            {skill.value && <Skill n={skill.value * 2} />}
+                            { !hideLevel && skill.value && <Skill n={skill.value * 2} />}
                         </div>
                     )
                 })

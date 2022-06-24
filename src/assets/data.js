@@ -135,29 +135,36 @@ export const PrimaryResume_Data = {
 export const Resume1_Data = {
     workExperience: [
         {
-            title: "Business Development Manager",
+            title: "Business Development Manager1",
             company: "AirState Solutions",
-            startDate: "Apr 2018",
-            endDate: "Jan 2020",
+            startDate: "dec 2018",
+            endDate: "ced 2020",
             type: "",
             location: "",
+            order: 0,
+            id: 0
         },
         {
-            title: "Business Development Manager",
+            title: "Business Development Manager2",
             company: "AirState Solutions",
             startDate: "Apr 2018",
             endDate: "Jan 2020",
             type: "",
             location: "",
+            order: 1,
+            id: 1
+
 
         },
         {
-            title: "Business Development Manager",
+            title: "Business Development Manager3",
             company: "AirState Solutions",
             startDate: "Apr 2018",
             endDate: "Jan 2020",
             type: "",
-            location: ""
+            location: "",
+            order: 2,
+            id: 2
         }
     ],
     Education: [

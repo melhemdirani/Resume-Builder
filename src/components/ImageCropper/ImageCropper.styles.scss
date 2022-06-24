@@ -1,0 +1,62 @@
+.ImageCropper_Container{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 600px;
+    height: 500px;
+    margin: 0 auto;
+    .controls{
+        width: 600px;
+        margin-top: 340px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .buttons{
+            height: 90px;
+            display: flex;
+            align-items: center;
+            button{
+                width: 40px;
+                cursor: pointer;
+                border-radius: 5px;
+                height: 40px;
+                border: 1px solid #D7D7D7;
+                margin: 0 5px;
+            }
+            .round{
+                border-radius: 50%;
+            }
+            .rect{
+                height: 60px;
+            }
+         
+        }
+        .save{
+            background-color: #2589FF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .slider{
+            width: 250px;
+            height: 40px;
+        }
+    }
+    .cropperContainer{
+        margin: 90px auto 0 auto;
+        width: 600px;
+        height: 300px;
+        background-color: black;
+
+    }
+    .string{
+        width: 50%;
+
+    }
+    .cropArea{
+        height: 200px;
+
+    }
+}
