@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import InputContainer from "./InputContainer";
 
 
-function LanguageSection({onArrayChange, data, j}) {
-    let Language= data.Language
+function LanguageSection({onArrayChange, Language, j}) {
     return (
     <div className='flex space inputRow'>
       

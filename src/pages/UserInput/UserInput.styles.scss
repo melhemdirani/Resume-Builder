@@ -25,12 +25,8 @@
     .resumes{
         margin-top: 75.45px;
         margin-right: 105px;
-        top: 75px;
         width: 500px;
         min-width: 430px;
-        position: sticky;
-        overflow-y: scroll;
-        overflow-x: visible !important;
     }
     .body{
         align-items: flex-start !important;
@@ -65,6 +61,10 @@
     .flex{
         display: flex;
         align-items: center;
+    }
+    .grid{
+        display: grid;
+        grid-template-columns: 40% 40%;
     }
     .space{
         justify-content: space-between;
@@ -375,6 +375,14 @@
                 }
             }
           
+            .inputRow2{
+                margin-top: 24px;
+                input{
+                    width: 50%;
+
+                }
+            }
+          
         }
         .addSection_button{
             width: 100%;
@@ -399,9 +407,16 @@
     border: 1px solid #DEDEDE;
     overflow-y: scroll;
     margin-top: 8px;
+    padding: 0 5px;
+    height: 200px;
+    .border{
+        border-right: 1px solid #D7D7D7;
+        padding-right: 10px;
+    }
     button{
         background-color: transparent;
         border: none;
+        cursor: pointer;
     }
     .toolbar{
         display: flex;
@@ -411,11 +426,33 @@
             border: none;
             margin-left: auto;
             margin-right: 5px;
+            cursor: pointer;
         }
 
     }
-}
+    .ProseMirror{
+     height: 200px;
+    }
+    .ProseMirror:focus{
+        outline: none;
 
+    }
+}
+.editor_fixed{
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: -10px;
+    left: 0;
+    .toolbar{
+        justify-content: center;
+        padding-top: 20px;
+        a{
+            position: absolute;
+            margin-left: calc(100vw + -50px);
+        }
+    }
+}
 .editor :global(.public-DraftEditor-content) {
     min-height: 140px;
 }

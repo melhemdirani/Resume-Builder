@@ -1,7 +1,6 @@
 import React, { useState , useRef} from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 
-import EditorContainer from "./EditorContainer";
 import DateInput from "./DateInput";
 import InputContainer from "./InputContainer";
 import checkbox from '../../assets/images/checkbox.svg';
@@ -11,7 +10,7 @@ import group from '../../assets/images/group.svg';
 import eye from '../../assets/images/Eye.svg';
 import Delete from '../../assets/images/delete.svg';
 
-const WorkSection = ({workExperience, onArrayChange, index, onExperienceDelete, moveCard, id}) => {
+const WorkSection = ({workExperience, onArrayChange, index, onExperienceDelete, moveCard, id, setDraggingWork}) => {
   const ref = useRef(null)
   const [{ handlerId }, drop] = useDrop({
     accept: 'div',
@@ -69,6 +68,8 @@ const WorkSection = ({workExperience, onArrayChange, index, onExperienceDelete, 
     }),
   })
   const opacity = isDragging ? 0 : 1
+  const marginBottom = isDragging? "-50px" : "15px"
+
   drag(drop(ref))
 
   let SetPresentValue = workExperience[index].endDate === "present" ? true : false
@@ -98,10 +99,13 @@ const WorkSection = ({workExperience, onArrayChange, index, onExperienceDelete, 
       <div 
         ref={ref} 
         data-handler-id={handlerId} 
-        style={{opacity}} 
+        style={{opacity, marginBottom}} 
         className="WorkSection_Container"
         onMouseEnter={() => {mouseEnter()}}
-        onMouseLeave={() => {mouseLeave()}} >
+        onMouseLeave={() => {mouseLeave()}} 
+        onDragEnd={() => setDraggingWork(false)}
+        onDragEnter={() => setDraggingWork(true)}
+        >
           <div style={{display:"flex"}} 
             
           >

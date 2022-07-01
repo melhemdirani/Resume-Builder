@@ -1,7 +1,7 @@
 .Resume6_Container {
     text-align: justify;
-    width: 431px;
-    height: 610px;
+    width: 100%;
+    height: 100%;
     font-size: 8.1px;
     font-weight: 500;
     background-color: white;
@@ -125,14 +125,16 @@
         color: white;
         p{
             background-color: #46AAC4;
-            padding: 0 5px;
             height: 100%;
             display: flex;
+            padding: 0 2px;
             text-align: left;
-            line-height: .7em;
+            line-height: 1em;
             align-items: center;
             text-transform: uppercase;
         }
     }
-
+    .c2_containers{
+      margin-right: 20px;
+    }
 }

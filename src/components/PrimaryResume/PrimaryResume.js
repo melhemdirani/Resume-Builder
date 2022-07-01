@@ -44,7 +44,7 @@ const SkillsList = ({Skill}) => {
 
 function PrimaryResume({width, height}) {
 
-    const {workExperience, Education, PersonalInfo, Skills, profile} = PrimaryResume_Data
+    const {workExperience, Education, PersonalInfo, Skills} = PrimaryResume_Data
 
     return (
         <div className='PrimaryResume_Container' style={{width: width, height: height}}>
@@ -74,7 +74,7 @@ function PrimaryResume({width, height}) {
             </div>
             <div className='c2'>
                 <div>
-                    <img alt="" src={profile} />
+                    <img alt="" src={PersonalInfo.profile} />
                     <p>{PersonalInfo.email}</p>
                     <p>{PersonalInfo.phone}</p>
                     <p>{PersonalInfo.place}</p>

@@ -1,0 +1,119 @@
+.progress{
+    width: 100%;
+    .MuiLinearProgress-colorPrimary{
+        width: 80%;
+        margin-left: 10px;
+        background-color: #022E58;
+    }
+    .MuiLinearProgress-barColorPrimary{
+        background-color: white;
+        width: 80%;
+    }
+}
+.Resume5_Container{
+    display: grid;
+    grid-template-columns: 20% 80%;
+    letter-spacing: -.05px    !important;
+
+    h2{
+        font-size: 8.5px;
+        font-weight: 900;
+        line-height: 13px;
+        padding: 0;
+        padding-bottom: 11px;
+        padding-top: 16px;
+        margin: 0;
+        text-transform: uppercase;
+    }
+    p, li{
+        font-weight: 400;
+        font-size: 6.72px;
+        line-height: 9px;
+        margin: 0;
+        max-width: 90%;
+    }
+    h4{
+        font-weight: 400;
+        font-size: 8px;
+        line-height: 9px;
+        font-weight: 700;
+        margin: 0; 
+    }
+    .profession{
+        font-size: 12px;
+        margin: 10px 0;
+    }
+    h1{
+        font-size: 18px;
+        margin: 10px 0;
+    }
+    .c1{
+        width: 100%;
+        background-color: #003D74;
+        color: white;
+        h2, p, h4, h1{
+            padding-left: 10px;
+        }
+        h2{
+            background-color: #022E58;
+            padding: 5px 0 5px 10px;
+            margin: 10px 0;
+        }
+        p{
+            margin: 5px 0;
+            font-weight: 200;
+        }
+        h4{
+            margin-top: 8px;
+        }
+        .progress{
+            margin-bottom: 15px;
+        }
+    }
+    .c2{
+        padding-left: 10px;
+        width: 100%;
+        background-color: white;
+        margin-top: 0;
+        .summary{
+            margin: 10px 0;
+            max-width: 350px;
+        }
+        h2{
+            border-top: 1px solid rgb(223, 223, 223) ;
+            border-bottom: 1px solid rgb(223, 223, 223) ;
+            padding: 2px 0;
+            color: #022E58;
+            margin: 5px 0;
+        }
+        .flex{
+            display: flex;
+            align-items: flex-start;
+        }
+        ul{
+            padding: 0 0 0 10px;
+            margin: 0;
+            li{
+                line-height: 10px;
+                max-width: 60%;
+            }
+        }
+        .dates {
+            margin-right: 20px;
+            width: 50px;
+            p:first-child{
+                margin: 5px 0;
+            }
+        }
+        h4{
+            margin: 5px 0;
+        }
+        .description{
+            width: 80%;
+        }
+    }
+    .c1, .c2{
+        padding-bottom: 30px;
+    }
+
+}

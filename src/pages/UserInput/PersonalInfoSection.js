@@ -102,18 +102,18 @@ function PersonalInfoSection({onPersonalChange, data, AdditionalButtons }) {
             </div>
             <div className='flex space inputRow'>
                 <InputContainer 
-                title="LinkedIn" 
-                placeholder='Ex:' 
-                onChange={onPersonalChange} 
-                value={PersonalInfo.linkedIn} 
-                name="linkedIn" 
+                    title="LinkedIn" 
+                    placeholder='Ex:' 
+                    onChange={onPersonalChange} 
+                    value={PersonalInfo.linkedIn} 
+                    name="linkedIn" 
                 />
                 <InputContainer 
-                title="Twitter" 
-                placeholder='Ex:' 
-                onChange={onPersonalChange}  
-                value={PersonalInfo.twitter} 
-                name="twitter" 
+                    title="Twitter" 
+                    placeholder='Ex:' 
+                    onChange={onPersonalChange}  
+                    value={PersonalInfo.twitter} 
+                    name="twitter" 
                 />
             </div>
             <div className='flex space inputRow'>

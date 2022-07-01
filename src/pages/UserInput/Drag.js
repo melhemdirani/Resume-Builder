@@ -6,17 +6,17 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 const Drag = () => {
    const  List =[
         {
-            title: "bitch1",
+            title: "ss1",
             id: 1
 
         },
         {
-            title: "bitch2",
+            title: "ss2",
             id: 2
 
         },
         {
-            title: "bitch3",
+            title: "ss",
             id: 3
 
         },

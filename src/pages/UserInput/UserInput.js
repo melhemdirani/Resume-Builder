@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useState, useCallback } from 'react';
+import React, { useContext, useEffect, useState, useCallback, useLayoutEffect } from 'react';
 import { jsPDF } from "jspdf";
 import ReactDOMServer from "react-dom/server";
-import { EditorState, convertToRaw, ContentState } from 'draft-js'
 
 
 import arrow from '../../assets/images/backarrow.svg';
@@ -17,7 +16,6 @@ import Union from '../../assets/images/Union.svg';
 
 import './UserInput.styles.scss';
 import WorkSection from './WorkSection';
-import Resume1 from '../../components/Resume1/Resume1';
 
 
 import { HashLink } from 'react-router-hash-link';
@@ -26,11 +24,29 @@ import PersonalInfoSection from './PersonalInfoSection';
 import SkillsSection from './SkillsSection';
 import CertificationSection from './CertificationSection';
 import OrganizationSection from './OrganizationSection';
-import EditorContainer from './EditorContainer';
 import LanguageSection from './LanguageSection';
 import AddSections from '../../components/AddSections/AddSections';
 import { EditorContext } from '../../components/EditorContext';
 import ImageCropper from '../../components/ImageCropper/ImageCropper';
+import TipEditor from './TipEditor';
+import Resume4 from '../../components/Resume4/Resume4';
+import Resume5 from '../../components/Resume5/Resume5';
+import Resume6 from '../../components/Resume6/Resume6';
+import Resume1 from '../../components/Resume1/Resume1';
+import Resume2 from '../../components/Resume2/Resume2';
+import Resume3 from '../../components/Resume3/Resume3';
+import { useParams } from 'react-router-dom';
+import { 
+        Resume1_Data,  
+        Resume2_Data,  
+        Resume3_Data,  
+        Resume4_Data,  
+        Resume5_Data,  
+        Resume6_Data,  
+    } from '../../assets/data';
+import ReferenceSection from './ReferenceSection';
+import ProfessionalSkillsSection from './ProfessionalSkillsSection';
+import VolunteerSection from './VolunteerSection';
 
 
 
@@ -69,10 +85,25 @@ const AdditionalButton = ({items, setShowAdditional, showAdditional}) => {
 
 
 function UserInput() {
+    const params = useParams()
 
-    const {data, setData, cropper, showAdditional, setShowAdditional}= useContext(EditorContext)
+    let selectedResume = params.resume
+
+    const {data, setData, cropper, showAdditional, setShowAdditional, round, summaryHtml, setSummaryHtml}= useContext(EditorContext)
+
+    const [achievementsHtml, setAchievementsHtml] = useState()
+    const [volunteerHtml, setVolunteerHtml] = useState()
+    const [projectsHtml, setProjectsHtml] = useState()
+
+
+   
 
     const [showPersonal, setShowPersonal] = useState(true)
+    const [summaryExpand, setSummaryExpand] = useState(false)
+    const [volunteerExpand, setVolunteerExpand] = useState(false)
+    const [projectsExpand, setProjectsExpand] = useState(false)
+    const [achievementsExpand, setAchievementsExpand] = useState(false)
+
     const [workIndex, setWorkIndex] = useState(data.workExperience.length)
     const [educationIndex, setEducationIndex] = useState(data.Education.length)
     const [skillIndex, setSkillIndex] = useState(data.Skills.length)
@@ -81,7 +112,10 @@ function UserInput() {
     const [langIndex, setLangIndex] = useState(data.Language.length)
     const [showAddSection, setShowAddSection] = useState(false)
     const [hideLevel, setHideLevel] = useState(false)
+    const [dragginWork, setDraggingWork] = useState(false)
     const [showAddButtons, setShowAddButtons] = useState(false)
+    const [windowHeight, setWindowHeight] = useState("")
+
 
     const AdditionalButtons = [
         {
@@ -111,69 +145,25 @@ function UserInput() {
     ]
     
 
-    const [n , setN ] = useState(651)
-    const [y , setY ] = useState(651)
-
-    const [text, setText] = useState(data.PersonalInfo.summary)
-
     const alternate = (variable) => {
-        if(variable.length === 0) {
+        if(variable.length === 0 || variable.length === undefined) {
             return false
         } else return true
+
     }
-    let length = data.workExperience.length + data.Education.length + data.Certification.length
 
-    useEffect(()=>{
-        if(length > 7){
-            let difference =  length - 7
-            setN(651 + difference*50)
-        }
-    }, [length])
-
-    useEffect(()=>{
-        let personalLength = data.PersonalInfo.summary.length*0.04
-        let textLength = data.PersonalInfo.summary.length
-        if(textLength > 870){
-            setY(y + personalLength)
-        }
-        if(data.Organization.length > 3){
-            let difference =  length - 3
-            setY(y + difference*25)
-        }
-        if(data.Language.length > 6){
-            let difference =  data.Language.length - 6
-            setY(y + difference*15)
-        }
-        if(data.Skills.length > 8){
-            let difference =  data.Skills.length  - 6
-            setY(y + difference*10)
-        }
-    }, [data.PersonalInfo.summary, data.Organization.length, data.Language.length,  data.Skills.length ])
+    const showSections = data.showSections
 
 
    
-    const [showSections, setShowSections] = useState({
-        workExperience: alternate(workIndex),
-        Education: alternate(educationIndex),
-        Skills: alternate(skillIndex),
-        Certification: alternate(certIndex),
-        Organization: alternate(orgIndex),
-        Language: alternate(langIndex),
-    })
-   
-  
-
-
-    const {profSummary, setProfSummary}= useContext(EditorContext)
-
-
     const onPersonalChange = (e) => {
-        
-        if(!showPersonal){
-            setShowPersonal(true)
+        if(!showSections.PersonalInfo){
+            setData(data => ({
+                ...data,
+                showSections:{ ...data.showSections, PeronalInfo: true}
+            }))
         }
         let {value, name } = e.target
-
         setData(data => ({
             ...data,
             PersonalInfo:{ ...data.PersonalInfo, [name]: value}
@@ -189,101 +179,62 @@ function UserInput() {
             ]
         }))
     }
-
-    const addMore = (arrayName, setFunction, variable ) => {
-        if(arrayName === data.workExperience){
-            let arr = arrayName[arrayName.length - 1]
-            let newArr = {...arr}
-            newArr.order = arr.order + 1
-            arrayName.push(newArr)
-        }else{
-            arrayName.push(arrayName[arrayName.length - 1]);
-        }
-        setFunction(variable + 1);
+    const addMore = (arrayName, array ) => {
+        let arr = arrayName[arrayName.length - 1]
+        let newArr = {...arr}
+        newArr.order = arr.order + 1
+        setData(data => ({
+            ...data,
+            [array]:[ ...arrayName,  newArr]
+        }))
+      
     }
 
-    const biggerValue = (a, b) => {
-        if ( a > b) {
-            return a
-        } else return b
-    }
-    const generatePdf = () => {
-        const doc = new jsPDF("p", "px", [600, biggerValue(n, y)]); // compare which height is bigger
-        doc.setFont('Roboto-Regular', 'normal');
-        doc.setFontSize(8);
-        let height = doc.internal.pageSize.getHeight();
-        let width = doc.internal.pageSize.getWidth();
-        doc.html(ReactDOMServer.renderToString(<Resume1 data={data} height={height} width={`calc(${width} - 100px)`} showSections={showSections} hideLevel={hideLevel}/>), {
-          x: 0,
-          y: 0,
-          callback: function (doc) {
-            doc.deletePage(2)
-            doc.save('sample.pdf');
-          },
-          width: 650, // <- here
-          windowWidth: 650, // <- here
-        });
-    }
-    useEffect(() => {
-        let newText = "";
-        for (let i = 0; i < mappedBlocks.length; i++) {
-            const block = mappedBlocks[i];
-            if (i === mappedBlocks.length - 1) {
-                newText += block;
-            } else {
-                // otherwise we join with \n, except if the block is already a \n
-                if (block === "\n") newText += block;
-                else newText += block + "\n";
-            }
-        }
-        return(setText(newText))
-    }, [profSummary])
-
-    useEffect(() => {
-        let e = { target: {value: text, name: "summary" }}
-        onPersonalChange(e)
-    }, [text])
-
-    const blocks = convertToRaw(profSummary.getCurrentContent()).blocks;
-    const mappedBlocks = blocks.map(
-      block => (!block.text.trim() && "\n") || block.text
-    );
+  
+   
 
     const newObj = (obj) =>  Object.keys(obj).reduce((accumulator, key) => {
         return {...accumulator, [key]: ""};
     }, {});
 
-    const onPersonalDelete = () => {
+    const onPersonalDelete = (show) => {
+
+        if (show === "Summary") {
+            setData(data => ({
+                ...data,
+                PersonalInfo: {
+                    ...data.PersonalInfo,
+                    summary: ""
+                }
+            }));
+            setSummaryHtml(null)
+        }
         setData(data => ({
             ...data,
-            PersonalInfo: newObj(data.PersonalInfo)
+            showSections:{ ...data.showSections, [show]: false}
         }))
-        let NewContent = ContentState.createFromText("");
-
-        setProfSummary(() => EditorState.createWithContent(NewContent))
-        setShowPersonal(false)
+        console.log("data PErson", data.PersonalInfo)
     }
    
-    const onArrayDelete = (setFunction,  Array, arrayName) => {
-        setFunction(0)
+    const onArrayDelete = (Array, arrayName) => {
         setData(data => ({
             ...data,
             [Array]: [newObj(arrayName)]
         }))
-        setShowSections(sections => ({
-            ...sections,
-            [Array]: false
+
+        setData(data => ({
+            ...data,
+            showSections:{ ...data.showSections, [Array]: false}
         }))
     }
     const onExperienceDelete = (i) => {
         if(data.workExperience.length < 2 ){
-            return onArrayDelete(setWorkIndex, "workExperience", data.workExperience)
+            return onArrayDelete( "workExperience", data.workExperience)
         } else{
             let newWorkExperience = data.workExperience
             let newArr= newWorkExperience.filter(function(value, index, arr){ 
                 return index !== i;
             });
-            setWorkIndex(workIndex - 1)
             setData(data => ({
                 ...data,
                 workExperience: newArr
@@ -294,12 +245,10 @@ function UserInput() {
 
     const addDetail = (setIndex, array) => {
         setIndex(1)
-        setShowSections(
-            showSections => ({
-                ...showSections,
-                [array]: true
-            })
-        )
+        setData(data => ({
+            ...data,
+            showSections:{ ...data.showSections, [array]: true}
+        }))
     }
 
     const moveCard = useCallback((dragIndex, hoverIndex) => {
@@ -313,29 +262,135 @@ function UserInput() {
 
             }
         });
-        setTimeout(() => {
+        if(!dragginWork){
             setData(data => ({
                 ...data,
                 workExperience: workExperience
             }))
-        }, 300)
+        }
+           
       
-    }, [ data.workExperience])
+    }, [dragginWork])
 
-    const AddPeronalInfo = ({item, value}) => {
-        setData(data => ({
-            ...data,
-            PersonalInfo:{ 
-                ...data.PersonalInfo, 
-                additionalInfo: {
-                    ...data.PersonalInfo.additionalInfo,
-                    [item]: value
-                }
-            }
-        }))
+    const [changedData, setChangedData] = useState(false)
+
+    useEffect(() => {
+        if( selectedResume === 'resume1') {
+            setChangedData(false)
+            setData(Resume1_Data)
+            setChangedData(true)
+        }
+        if( selectedResume === 'resume2' ){
+            setChangedData(false)
+            setData(Resume2_Data)
+            setChangedData(true)
+        }
+        if( selectedResume === 'resume3'){
+            setChangedData(false)
+            setData(Resume3_Data)
+            setChangedData(true)
+        }
+        if( selectedResume === 'resume4'){
+            setChangedData(false)
+            setData(Resume4_Data)
+            setChangedData(true)
+        }
+        if( selectedResume === 'resume5'){
+            setChangedData(false)
+            setData(Resume5_Data)
+            setChangedData(true)
+        }
+        if( selectedResume === 'resume6' ){
+            setChangedData(false)
+            setData(Resume6_Data)
+            setChangedData(true)
+        }
+    console.log("data",data)
+
+    }, [params.resume])
+
+  
+    const generatePdf = () => {
+        const doc = new jsPDF("p", "px", [500, windowHeight]); 
+        doc.setFontSize(8);
+        let height = doc.internal.pageSize.getHeight();
+        let width = doc.internal.pageSize.getWidth();
+        if( selectedResume === 'resume1'){
+            doc.html(ReactDOMServer.renderToString(<Resume1 summaryHtml={summaryHtml}  data={data} height={height} width={width}  hideLevel={hideLevel}  borderRadius={round ? "50%" : 0}/>), {
+                x: 0,
+                y: 0,
+                callback: function (doc) {
+                  doc.deletePage(2)
+                  doc.save('sample.pdf');
+                },
+                width: 650, // <- here
+                windowWidth: 650, // <- here
+              });
+        } else
+        if( selectedResume === 'resume2'){
+            doc.html(ReactDOMServer.renderToString(<Resume2 summaryHtml={summaryHtml} data={data} height={height} width={width}  hideLevel={hideLevel} />), {
+                x: 0,
+                y: 0,
+                callback: function (doc) {
+                  doc.deletePage(2)
+                  doc.save('sample.pdf');
+                },
+                width: 650, // <- here
+                windowWidth: 650, // <- here
+              });
+        } else
+        if( selectedResume === 'resume3'){
+            doc.html(ReactDOMServer.renderToString(<Resume3 achievementsHtml={achievementsHtml} summaryHtml={summaryHtml} projectsHtml={projectsHtml} data={data} height={height} width={width}  hideLevel={hideLevel}  borderRadius={round ? "50%" : 0}/>), {
+                x: 0,
+                y: 0,
+                callback: function (doc) {
+                  doc.deletePage(2)
+                  doc.save('sample.pdf');
+                },
+                width: 650, // <- here
+                windowWidth: 650, // <- here
+              });
+        } else
+        if( selectedResume === 'resume4'){
+            doc.html(ReactDOMServer.renderToString(<Resume4 data={data} height={height} width={`calc(${width} - 100px)`} showSections={showSections} hideLevel={hideLevel}  summaryHtml={summaryHtml}/>), {
+                x: 0,
+                y: 0,
+                callback: function (doc) {
+                  doc.deletePage(2)
+                  doc.save('sample.pdf');
+                },
+                width: 650, // <- here
+                windowWidth: 650, // <- here
+              });
+        } else
+        if( selectedResume === 'resume5'){
+            doc.html(ReactDOMServer.renderToString(<Resume5 data={data} height={height} width={`calc(${width} - 100px)`} volunteerHtml={volunteerHtml}  summaryHtml={summaryHtml} />), {
+                x: 0,
+                y: 0,
+                callback: function (doc) {
+                  doc.deletePage(2)
+                  doc.save('sample.pdf');
+                },
+                width: 650, // <- here
+                windowWidth: 650, // <- here
+              });
+        } else
+        if( selectedResume === 'resume6'){
+            doc.html(ReactDOMServer.renderToString(<Resume6 achievementsHtml={achievementsHtml} data={data} height={height} width={`calc(${width} - 100px)`} showSections={showSections} hideLevel={hideLevel} summaryHtml={summaryHtml}/>), {
+                x: 0,
+                y: 0,
+                callback: function (doc) {
+                  doc.deletePage(2)
+                  doc.save('sample.pdf');
+                },
+                width: 650, // <- here
+                windowWidth: 650, // <- here
+              });
+        }
     }
 
-    return (
+
+    return changedData && (
 
     <div className='UserInput_Container' style={showAddSection ? { marginTop: "-100vh" } : {margin: "0"}}>
             {showAddSection && 
@@ -378,19 +433,19 @@ function UserInput() {
                     </div>
                     <div className='row2'>
                         <div className='Menu'>
-                            {showPersonal && <HashLink to='/editor/#personal'>Basic Info</HashLink>}
-                            {showPersonal && <HashLink to='/editor/#summary'>Summary</HashLink>}
-                            {showSections.Skills && <HashLink to='/editor/#Skills'>Skills</HashLink>}
-                            {showSections.workExperience && <HashLink to='/editor/#workExperience'>Work Experience</HashLink>}
-                            {showSections.Education && <HashLink to='/editor/#Education'>Education</HashLink>}
-                            {showSections.Certification && <HashLink to='/editor/#Certification'>Certification</HashLink>}
-                            {showSections.Organization && <HashLink to='/editor/#Organization'>Organization</HashLink>}
-                            {showSections.Language && <HashLink to='/editor/#Language'>Language</HashLink>}
+                            {showSections.PersonalInfo && <HashLink to='#personal'>Basic Info</HashLink>}
+                            {showSections.PersonalInfo && <HashLink to='#summary'>Summary</HashLink>}
+                            {showSections.Skills && <HashLink to='#Skills'>Skills</HashLink>}
+                            {showSections.workExperience && <HashLink to='#workExperience'>Work Experience</HashLink>}
+                            {showSections.Education && <HashLink to='#Education'>Education</HashLink>}
+                            {showSections.Certification && <HashLink to='#Certification'>Certification</HashLink>}
+                            {showSections.Organization && <HashLink to='#Organization'>Organization</HashLink>}
+                            {showSections.Language && <HashLink to='#Language'>Language</HashLink>}
                         </div>
                         <div className='inputs'>
-                            {  showPersonal && 
+                            {  data.showSections.PersonalInfo && 
                                 <div id='personal'>
-                                    <TitleContainer title={"Personal Info"} onDelete={onPersonalDelete}/>
+                                    <TitleContainer title={"Personal Info"} onDelete={() => onPersonalDelete("PersonalInfo")}/>
                                     <PersonalInfoSection 
                                         onPersonalChange={onPersonalChange} 
                                         data={data} 
@@ -418,10 +473,10 @@ function UserInput() {
                                     }
                                 </div>
                             }
-                            {  showPersonal && 
+                            {  showSections.Summary && 
                                 <div id='summary'>
-                                    <TitleContainer title={"Professional Summary"} />
-                                    <EditorContainer editorState={profSummary} setEditorState={setProfSummary} />
+                                    <TitleContainer title={"Professional Summary"} onDelete={() => onPersonalDelete("Summary")}/>
+                                    <TipEditor summary={data.PersonalInfo.summary} setSummaryHtml={setSummaryHtml} expand={summaryExpand} setExpand={setSummaryExpand}/>
                                 </div>
                                     
                             }
@@ -433,7 +488,6 @@ function UserInput() {
                                         title={"Work Experience"} 
                                         onDelete={
                                             () => onArrayDelete(
-                                                setWorkIndex, 
                                                 "workExperience", 
                                                 data.workExperience, 
                                             )
@@ -450,11 +504,12 @@ function UserInput() {
                                             id={item.order} 
                                             onExperienceDelete={onExperienceDelete}
                                             moveCard={moveCard}
+                                            setDraggingWork={setDraggingWork}
                                         />
                                     )}
                                     <button 
                                     className='add_button' 
-                                    onClick={() => addMore(data.workExperience, setWorkIndex, workIndex)}
+                                    onClick={() => addMore(data.workExperience, "workExperience")}
                                     > 
                                         + Add More Position
                                     </button>
@@ -466,7 +521,6 @@ function UserInput() {
                                         title={"Education"} 
                                         onDelete={
                                             () => onArrayDelete(
-                                                setEducationIndex, 
                                                 "Education", 
                                                 data.Education,
                                             )
@@ -482,7 +536,36 @@ function UserInput() {
                                     )}
                                     <button 
                                     className='add_button' 
-                                    onClick={() => addMore(data.Education, setEducationIndex, educationIndex)}
+                                    onClick={() => addMore(data.Education, "Education")}
+                                    > 
+                                        + Add More Education
+                                    </button>
+                                </div>
+                            }
+                            {   showSections.Volunteer &&
+                                <div id='Volunteer'>
+                                    <TitleContainer 
+                                        title={"Volunteer"} 
+                                        onDelete={
+                                            () => onArrayDelete(
+                                                "Volunteer", 
+                                                data.Volunteer,
+                                            )
+                                        }
+                                    />
+                                    { data.Volunteer.map((e, index) => 
+                                        <VolunteerSection 
+                                        Volunteer={data.Volunteer}  
+                                        onArrayChange={onArrayChange} 
+                                        index={index} 
+                                        key={index}  
+                                        />
+                                    )}
+                                    <TipEditor summary={data.Volunteer.description} setSummaryHtml={setVolunteerHtml} expand={volunteerExpand} setExpand={setVolunteerExpand}/>
+
+                                    <button 
+                                    className='add_button' 
+                                    onClick={() => addMore(data.Volunteer, "Volunteer")}
                                     > 
                                         + Add More Education
                                     </button>
@@ -490,11 +573,11 @@ function UserInput() {
                             }
                             { showSections.Skills &&
                                 <div id='Skills'>
-                                    <TitleContainer title={"Skills"} onDelete={() => onArrayDelete(setSkillIndex, "Skills", data.Skills)}/>
-                                    { [...Array(skillIndex)].map((e, index) => 
+                                    <TitleContainer title={"Skills"} onDelete={() => onArrayDelete("Skills", data.Skills)}/>
+                                    { data.Skills.map((e, index) => 
                                         <SkillsSection 
                                         onArrayChange={onArrayChange} 
-                                        data={data} 
+                                        Skills={data.Skills} 
                                         j={index}
                                         key={index}
                                         hideLevel={hideLevel}
@@ -502,7 +585,7 @@ function UserInput() {
                                     )}
                                     <button 
                                     className='add_button' 
-                                    onClick={() => addMore(data.Skills, setSkillIndex, skillIndex)}
+                                    onClick={() => addMore(data.Skills, "Skills")}
                                     > 
                                         + Add More Skill
                                     </button>
@@ -512,10 +595,32 @@ function UserInput() {
                                     </p>
                                 </div>
                             }
+                            { showSections.ProfessionalSkills &&
+                                <div id='ProfessionalSkills'>
+                                    <TitleContainer title={"Professional Skills"} onDelete={() => onArrayDelete("ProfessionalSkills", data.ProfessionalSkills)}/>
+                                    <div className='flex space inputRow'>
+
+                                        { data.ProfessionalSkills.map((e, index) => 
+                                            <ProfessionalSkillsSection 
+                                            onArrayChange={onArrayChange} 
+                                            ProfessionalSkills={data.ProfessionalSkills} 
+                                            j={index}
+                                            key={index}
+                                        />
+                                        )}
+                                    </div>
+                                    <button 
+                                    className='add_button' 
+                                    onClick={() => addMore(data.ProfessionalSkills, "Skills")}
+                                    > 
+                                        + Add More Skill
+                                    </button>
+                                </div>
+                            }
                             {   showSections.Certification &&
                                 <div id='Certification'>
-                                    <TitleContainer title={"Certification"} onDelete={() => onArrayDelete(setCertIndex, "Certification", data.Certification)}/>
-                                    { [...Array(certIndex)].map((e, index) => 
+                                    <TitleContainer title={"Certifications & Awards"} onDelete={() => onArrayDelete("Certification", data.Certification)}/>
+                                    { data.Certification.map((e, index) => 
                                         <CertificationSection 
                                         onArrayChange={onArrayChange} 
                                         data={data} 
@@ -525,7 +630,7 @@ function UserInput() {
                                     )}
                                     <button 
                                     className='add_button' 
-                                    onClick={() => addMore(data.Certification, setCertIndex, certIndex)}
+                                    onClick={() => addMore(data.Certification, "Certification")}
                                     > 
                                         + Add More Certification
                                     </button>
@@ -533,18 +638,18 @@ function UserInput() {
                             }
                             {   showSections.Organization &&
                                 <div id='Organization'>
-                                    <TitleContainer title={"Organization"} onDelete={() => onArrayDelete(setOrgIndex, "Organization", data.Organization)}/>
-                                    { [...Array(orgIndex)].map((e, index) => 
+                                    <TitleContainer title={"Organization"} onDelete={() => onArrayDelete( "Organization", data.Organization)}/>
+                                    { data.Organization.map((e, index) => 
                                         <OrganizationSection 
                                         onArrayChange={onArrayChange} 
-                                        data={data} 
-                                        index={index}
+                                        Organization={data.Organization} 
+                                        index={index}x
                                         key={index}
                                     />
                                     )}
                                     <button 
                                     className='add_button' 
-                                    onClick={() => addMore(data.Organization, setOrgIndex, orgIndex)}
+                                    onClick={() => addMore(data.Organization, "Organization")}
                                     > 
                                         + Add More Organization
                                     </button>
@@ -552,21 +657,52 @@ function UserInput() {
                             }
                             {   showSections.Language &&
                                 <div id='Language'>
-                                    <TitleContainer title={"Language"} onDelete={() => onArrayDelete(setLangIndex, "Language", data.Language)}/>
-                                    { [...Array(langIndex)].map((e, index) => 
+                                    <TitleContainer title={"Language"} onDelete={() => onArrayDelete("Language", data.Language)}/>
+                                    { data.Language.map((e, index) => 
                                         <LanguageSection 
-                                        onArrayChange={onArrayChange} 
-                                        data={data} 
-                                        j={index}
-                                        key={index}
-                                    />
+                                            onArrayChange={onArrayChange} 
+                                            Language={data.Language} 
+                                            j={index}
+                                            key={index}
+                                        />
                                     )}
                                     <button 
                                     className='add_button' 
-                                    onClick={() => addMore(data.Language, setLangIndex, langIndex)}
+                                    onClick={() => addMore(data.Language, "Language")}
                                     > 
                                         + Add More Language
                                     </button>
+                                </div>
+                            }
+                            {   showSections.References &&
+                                <div id='References'>
+                                    <TitleContainer title={"References"} onDelete={() => onArrayDelete( "References", data.References)}/>
+                                    { data.References.map((ref, index) => 
+                                        <ReferenceSection 
+                                            onArrayChange={onArrayChange} 
+                                            data={data} 
+                                            index={index}
+                                            key={index}
+                                        />
+                                    )}
+                                    <button 
+                                    className='add_button' 
+                                    onClick={() => addMore(data.References, "References")}
+                                    > 
+                                        + Add More References
+                                    </button>
+                                </div>
+                            }
+                            { showSections.Achievements &&
+                                <div>
+                                    <TitleContainer title={"Achievements"} onDelete={() => onArrayDelete( "Achievements", data.Achievements)}/>
+                                    <TipEditor summary={data.Achievements} setSummaryHtml={setAchievementsHtml} expand={achievementsExpand} setExpand={setAchievementsExpand}/>
+                                </div>
+                            }
+                            { showSections.Projects &&
+                                <div>
+                                    <TitleContainer title={"Projects"} onDelete={() => onArrayDelete( "Projects", data.Projects)}/>
+                                    <TipEditor summary={data.Projects} setSummaryHtml={setProjectsHtml} expand={projectsExpand} setExpand={setProjectsExpand}/>
                                 </div>
                             }
                             <button className='addSection_button' onClick={() => setShowAddSection(true)}>
@@ -577,7 +713,79 @@ function UserInput() {
                     </div>
                 </div>
                 <div className='resumes'>
-                        <Resume1 data={data}  grid={"40% 60%"} width={"450px"} showSections={showSections} height="632px" hideLevel={hideLevel}/>
+                    {   selectedResume === 'resume1'
+                        ? <Resume1
+                            data={data}  
+                            width={"450px"} 
+                            height="auto" 
+                            hideLevel={hideLevel} 
+                            borderRadius={round ? "50%" : 0}
+                            setWindowHeight={setWindowHeight}
+                            summaryHtml={summaryHtml}
+                        />
+                        : selectedResume === 'resume2' 
+                        ? <Resume2
+                            data={data}  
+                            grid={"30% 70%"} 
+                            width={"450px"} 
+                            height="auto" 
+                            hideLevel={hideLevel} 
+                            borderRadius={round ? "50%" : 0}
+                            setWindowHeight={setWindowHeight}
+                            summaryHtml={summaryHtml}
+
+                        />
+                        : selectedResume === 'resume3' 
+                        ? <Resume3
+                            data={data}  
+                            grid={"30% 70%"} 
+                            width={"400px"} 
+                            height="auto" 
+                            hideLevel={hideLevel} 
+                            borderRadius={round ? "50%" : 0}
+                            summaryHtml={summaryHtml}
+                            achievementsHtml={achievementsHtml}
+                            projectsHtml={projectsHtml}
+                            setWindowHeight={setWindowHeight}
+                        />
+                        : selectedResume === 'resume4' 
+                        ? <Resume4
+                            data={data}  
+                            grid={"30% 70%"} 
+                            width={"450px"} 
+                            showSections={showSections} 
+                            height="auto" 
+                            hideLevel={hideLevel} 
+                            borderRadius={round ? "50%" : 0}
+                            summaryHtml={summaryHtml}
+                            setWindowHeight={setWindowHeight}
+                        />
+                        : selectedResume === 'resume5' 
+                        ? <Resume5
+                            data={data}  
+                            grid={"30% 70%"} 
+                            width={"450px"} 
+                            height="auto" 
+                            hideLevel={hideLevel} 
+                            borderRadius={round ? "50%" : 0}
+                            setWindowHeight={setWindowHeight}
+                            summaryHtml={summaryHtml}
+                            volunteerHtml={volunteerHtml}
+                        />
+                        : selectedResume === 'resume6' 
+                        ? <Resume6
+                            data={data}  
+                            grid={"30% 70%"} 
+                            width={"450px"} 
+                            height="auto" 
+                            hideLevel={hideLevel} 
+                            borderRadius={round ? "50%" : 0}
+                            achievementsHtml={achievementsHtml} 
+                            setWindowHeight={setWindowHeight}
+                            summaryHtml={summaryHtml}
+                        />
+                        : null
+                    }
                 </div>
             </div>
         </div>
