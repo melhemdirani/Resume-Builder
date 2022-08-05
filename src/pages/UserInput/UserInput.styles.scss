@@ -3,10 +3,66 @@
     input, .input{
         border: 1px solid #DEDEDE;
     }
+    .ulSort{
+        list-style-type:none !important;
+        li{
+            margin-left: 0;
+        }
+    }
+    .imagecropper{
+        position: fixed;
+        z-index: 9999;
+        background-color: rgba(0, 0, 0, 0.25);
+        width: 100vw;
+        height: 100vh;
+        margin-top: -80px;
+        padding-top: 200px;
+    }
+    .resumename{
+        padding-left: 15px;
+        img{
+            margin-left: 10px;
+            width: 30px;
+            cursor: pointer;
+        }
+        input{
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 21px;
+            color: #2A2F32;
+            background-color: transparent;
+            border: none;
+            width: 170px;
+            padding: 0;
+        }
+        input:focus{
+            outline: none;
+        }
+    }
+    .editableSection{
+        padding-left: 15px;
+        img{
+            margin-left: 10px;
+            width: 30px;
+            cursor: pointer;
+        }
+        input{
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 21px;
+            color: #2A2F32;
+            background-color: white;
+            width: 170px;
+            padding: 7px;
+        }
+        input:focus{
+            outline: none;
+        }
+    }
     .Menu{
         display: flex;
         flex-direction: column;
-        top: 35px;
+        top: 90px;
         position: sticky;
         align-self: flex-start;
         a{
@@ -18,15 +74,15 @@
 
           margin: 0;
         }
-        a:last-child{
-          border-left: 4px solid #1890FF;
-        }
+        
       }
     .resumes{
         margin-top: 75.45px;
-        margin-right: 105px;
         width: 500px;
         min-width: 430px;
+        position: fixed;
+        top: 70px;
+        right: 0
     }
     .body{
         align-items: flex-start !important;
@@ -35,7 +91,10 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        position: sticky;
+        z-index: 99;
         height: 81px;
+        top: 0;
         background-color: white;
         padding: 0 17.5px 0 16px;
         .download{
@@ -210,6 +269,7 @@
                     }
                     img{
                         margin-left: 10px;
+                        cursor: pointer;
                     }
                     .DeleteButton{
                         cursor: pointer;
@@ -297,6 +357,21 @@
               
                 .input2{
                     width: 568px;
+                }
+                .input3{
+                    width: 100%;
+                    .input_container{
+                        display: flex;
+                        input{
+                            width: 100% !important;
+                        }
+                        img{
+                            margin-right: -35px;
+                            width: 25px;
+                            padding-left: 10px;
+                            cursor: pointer;
+                        }
+                    }
                 }
                 .photoAdd{
                     margin-left: 16px;

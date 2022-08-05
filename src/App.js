@@ -39,7 +39,9 @@ function App() {
   }
 
   const [showAdditional, setShowAdditional] = useState({
-    Nationality: false,
+    LinkedIn: true,
+    Twitter: true,
+    Nationality: true,
     Country: false,
     DrivingLicense: false,
     PlaceOfBirth : false,

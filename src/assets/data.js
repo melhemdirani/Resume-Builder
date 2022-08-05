@@ -28,6 +28,7 @@ export const PrimaryResume_Data = {
             endDate: "Present",
             duration: "1 year",
             description: "Directly collaborated with CEO and Product team to prototype, design and deliver the UI and UX experience with a lean design process: research, design, test, and iterate.",
+           
             location: "Paris",
         },
         {
@@ -171,6 +172,7 @@ export const Resume1_Data = {
             endDate: "jan 2020",
             type: "",
             location: "",
+            description: "",
             order: 0,
             id: 0,
             tasks: []
@@ -180,6 +182,7 @@ export const Resume1_Data = {
             company: "AirState Solutions",
             startDate: "Apr 2018",
             endDate: "Jan 2020",
+            description: "",
             type: "",
             location: "",
             order: 1,
@@ -192,6 +195,7 @@ export const Resume1_Data = {
             startDate: "Apr 2018",
             endDate: "Jan 2020",
             type: "",
+            description: "",
             location: "",
             order: 2,
             id: 2,
@@ -350,6 +354,7 @@ export const Resume2_Data = {
             location: "Birmingham, AL",
             order: 0,
             id: 0,
+            description: "",
             tasks:  [
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                 "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -365,6 +370,7 @@ export const Resume2_Data = {
             location: "Birmingham, AL",
             order: 1,
             id: 1,   
+            description: "",
             tasks:  [
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                 "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -380,6 +386,7 @@ export const Resume2_Data = {
             location: "Birmingham, AL",
             order: 2,
             id: 2,   
+            description: "",
             tasks:  [
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
             ]
@@ -535,6 +542,7 @@ export const Resume3_Data = {
             type: "",
             location: "Birmingham, AL",
             order: 0,
+            description: "",
             id: 0,
             tasks: [
                 "Maintained and organized numerous office files",
@@ -678,6 +686,7 @@ export const Resume4_Data = {
             location: "",
             order: 0,
             id: 0,
+            description: "",
             tasks: [
                 "Maintained and organized numerous office files",
                 "Constantly updated the company's contact and mailing lists",
@@ -854,6 +863,7 @@ export const Resume5_Data = {
             location: "West School District",
             order: 0,
             id: 0,
+            description: "",
             tasks: [
                 "Maintained and organized numerous office files, Maintained and organized numerous office files, Maintained and organized numerous office files",
                 "Constantly updated the company's contact and mailing lists",

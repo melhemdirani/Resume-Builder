@@ -6,11 +6,12 @@ import infoCircle from '../../assets/images/InfoCircle.svg';
 import ImageCropper from '../../components/ImageCropper/ImageCropper';
 import InputContainer from './InputContainer';
 import { EditorContext } from '../../components/EditorContext';
+import DeletableInput from './DeletableInput';
 
 
 
-function PersonalInfoSection({onPersonalChange, data, AdditionalButtons }) {
-    const {image, setCropper, setImage, showAdditional, AddPeronalInfo}= useContext(EditorContext)
+function PersonalInfoSection({onPersonalChange, data, AdditionalButtons, setAdditionalButtons }) {
+    const {image, setCropper, setImage, showAdditional, AddPeronalInfo, setShowAdditional}= useContext(EditorContext)
 
     const [uploaded, setUploaded] = useState(false)
      
@@ -39,6 +40,7 @@ function PersonalInfoSection({onPersonalChange, data, AdditionalButtons }) {
         setCropper(true)
         window.scrollTo(0, 0)
     }
+
     return (
         <div>
             <div className='flex space'>
@@ -100,22 +102,7 @@ function PersonalInfoSection({onPersonalChange, data, AdditionalButtons }) {
                 name="Lastname"
                 />
             </div>
-            <div className='flex space inputRow'>
-                <InputContainer 
-                    title="LinkedIn" 
-                    placeholder='Ex:' 
-                    onChange={onPersonalChange} 
-                    value={PersonalInfo.linkedIn} 
-                    name="linkedIn" 
-                />
-                <InputContainer 
-                    title="Twitter" 
-                    placeholder='Ex:' 
-                    onChange={onPersonalChange}  
-                    value={PersonalInfo.twitter} 
-                    name="twitter" 
-                />
-            </div>
+       
             <div className='flex space inputRow'>
                 <InputContainer 
                 title="Email" 
@@ -132,34 +119,33 @@ function PersonalInfoSection({onPersonalChange, data, AdditionalButtons }) {
                 name="phone" 
                 />
             </div>
-            <div className='flex space inputRow'>
-                {
-                    AdditionalButtons.map((button, i) => {
-                        const {show, item} = button
-                        return showAdditional[show] && (
-                            <div style={{margin: "10px 0"}} key={i}>
-                                <InputContainer 
-                                    title={item} 
-                                    name={item} 
-                                    placeholder='Ex:' 
-                                    onChange={AddPeronalInfo}  
-                                    value={PersonalInfo.additionalInfo.item} 
-                                />
-                            </div>
-                        )
-                    })
-                }
-
-            </div>
-            
             <InputContainer 
-            title="Address"  
-            large={true} 
-            placeholder='Ex:' 
-            onChange={onPersonalChange}  
-            value={PersonalInfo.place} 
-            name="place"
+                title="Address"  
+                large={true} 
+                placeholder='Ex:' 
+                onChange={onPersonalChange}  
+                value={PersonalInfo.place} 
+                name="place"
             />
+            {
+                Object.keys(AdditionalButtons).map((keyName, i) => {
+
+                    return AdditionalButtons[keyName] && (
+                        <div key={i}>
+                            <DeletableInput     
+                                title={[keyName]} 
+                                setAdditionalButtons={setAdditionalButtons}
+                                name={[keyName]} 
+                                show={AdditionalButtons[keyName]}
+                                placeholder='Ex:' 
+                                onChange={AddPeronalInfo}  
+                                value={PersonalInfo.additionalInfo.item} 
+                            />
+                        </div>
+                    )
+                })
+            }
+
         </div>
     )
 }

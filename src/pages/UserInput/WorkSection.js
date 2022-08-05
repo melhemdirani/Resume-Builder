@@ -1,5 +1,6 @@
 import React, { useState , useRef} from 'react';
 import { useDrag, useDrop } from 'react-dnd';
+import { SortableElement } from 'react-sortable-hoc'
 
 import DateInput from "./DateInput";
 import InputContainer from "./InputContainer";
@@ -9,77 +10,84 @@ import arrowDown from '../../assets/images/arrowDownG.svg';
 import group from '../../assets/images/group.svg';
 import eye from '../../assets/images/Eye.svg';
 import Delete from '../../assets/images/delete.svg';
+import TipEditor from './TipEditor';
 
-const WorkSection = ({workExperience, onArrayChange, index, onExperienceDelete, moveCard, id, setDraggingWork}) => {
-  const ref = useRef(null)
-  const [{ handlerId }, drop] = useDrop({
-    accept: 'div',
-    collect(monitor) {
-      return {
-        handlerId: monitor.getHandlerId(),
-      }
-    },
-    hover(item, monitor) {
-      if (!ref.current) {
-        return
-      }
-      const dragIndex = item.index
-      const hoverIndex = index
-      // Don't replace items with themselves
-      if (dragIndex === hoverIndex) {
-        return
-      }
-      // Determine rectangle on screen
-      const hoverBoundingRect = ref.current?.getBoundingClientRect()
-      // Get vertical middle
-      const hoverMiddleY =
-        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
-      // Determine mouse position
-      const clientOffset = monitor.getClientOffset()
-      // Get pixels to the top
-      const hoverClientY = clientOffset.y - hoverBoundingRect.top
-      // Only perform the move when the mouse has crossed half of the items height
-      // When dragging downwards, only move when the cursor is below 50%
-      // When dragging upwards, only move when the cursor is above 50%
-      // Dragging downwards
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-        return
-      }
-      // Dragging upwards
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-        return
-      }
-      // Time to actually perform the action
-      moveCard(dragIndex, hoverIndex)
-      // Note: we're mutating the monitor item here!
-      // Generally it's better to avoid mutations,
-      // but it's good here for the sake of performance
-      // to avoid expensive index searches.
-      item.index = hoverIndex
-    },
-  })
-  const [{ isDragging }, drag] = useDrag({
-    type: 'div',
-    item: () => {
-      return { id, index }
-    },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  })
-  const opacity = isDragging ? 0 : 1
-  const marginBottom = isDragging? "-50px" : "15px"
 
-  drag(drop(ref))
 
-  let SetPresentValue = workExperience[index].endDate === "present" ? true : false
+
+
+const styles = {
+  container: {
+    width: "558px",
+    marginLeft:" -20px",
+    marginBottom: "10px",
+    marginLeft: "-40px",
+    listStyleType: "none"
+  },
+  subConainer:{
+    display: "flex",
+    width: "544px",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "8px 12px",
+    lineHeight: "24px",
+    border: "1px solid #D9D9D9",
+    borderRadius: "2px",
+    backgroundColor: "white"
+  },
+  work: {
+    fontSize: "14px",
+    fontWeight: "700",
+    margin: 0
+  },
+  arrow:{
+    cursor: "pointer"
+  } ,
+  date:{
+    margin: 0,
+    cursor: "move"
+
+  },
+  date2:{
+    margin: 0,
+  },
+  groupedImages:{
+    marginRight: "-40px",
+    marginLeft: "10px",
+    display: "flex",
+    flexDirection: "column",
+    marginTop: "5px",
+  },
+  img: {
+    marginBottom: "11px",
+  },
+  button:{
+      border: "none",
+      backgroundColor: "transparent",
+      padding: 0,
+      height: "30px",
+      cursor: "pointer",
+  },
+  moveIcon: {
+    cursor: "move",
+    position: "absolute",
+    margin: "18px 0 0 -25px"
+  }
+}
+
+const WorkSection = ({value, index, onArrayChange, onExperienceDelete, setDisabled, disabled}) => {
+
+  const workExperience= value
   
-
-  const [present, setPresent] = useState(SetPresentValue)
-
-
   const [showInputs, setShowInputs] = useState(false)
   const [showMove, setShowMove] = useState(false)
+  
+  let SetPresentValue = workExperience.endDate === "present" ? true : false
+  
+  const [present, setPresent] = useState(SetPresentValue)
+  const onArrowClick = () => {
+    setShowInputs(!showInputs)
+  }
 
     
   const mouseEnter = () => {
@@ -95,41 +103,51 @@ const WorkSection = ({workExperience, onArrayChange, index, onExperienceDelete, 
     else return
   }
 
+  const [descriptionHtml, setDescriptionHtml] = useState(workExperience.description)
+  const [summaryExpand, setSummaryExpand] = useState(false)
+
+  const disableDrag = () => {
+    if(!disabled){
+      setDisabled(true)
+    }
+  }
+  const enableDrag = () => {
+    if(!disabled && !showInputs){
+      setDisabled(false)
+    }
+  }
+  
+
   return(
-      <div 
-        ref={ref} 
-        data-handler-id={handlerId} 
-        style={{opacity, marginBottom}} 
-        className="WorkSection_Container"
+      <li 
+        style={styles.container}
         onMouseEnter={() => {mouseEnter()}}
         onMouseLeave={() => {mouseLeave()}} 
-        onDragEnd={() => setDraggingWork(false)}
-        onDragEnter={() => setDraggingWork(true)}
         >
           <div style={{display:"flex"}} 
             
           >
-            {showMove && <img alt="" src={group} className="moveIcon" />}
-            <div className='Experience_SubContainer'>
-                <div>
-                    <p className='work'>{workExperience[index].title} at {workExperience[index].company} </p>
-                    <p className='date'>{workExperience[index].startDate} - {workExperience[index].endDate}</p>
+            {showMove && <img alt="" src={group}  style={styles.moveIcon}/>}
+            <div style={styles.subConainer}>
+                <div style={showInputs ? styles.date2 : styles.date} onMouseEnter={() => enableDrag()}>
+                    <p style={styles.work}>{workExperience.title} at {workExperience.company} </p>
+                    <p style={styles.date2}>{workExperience.startDate} - {workExperience.endDate}</p>
                 </div>
-                <img 
-                  alt="" 
-                  src={arrowDown} 
-                  onClick={() => {setShowInputs(!showInputs)}} 
-                  className="arrow"
-                  style={{
-                    transform: showInputs ? "rotate(180deg) " : "rotate(0deg)"
-                  }}
-                />
+                <div onMouseEnter={() => disableDrag()}>
+                  <img 
+                    alt="" 
+                    src={arrowDown} 
+                    onClick={() => {onArrowClick()}} 
+                    style={styles.arrow}
+                  />
+                </div>
+               
             </div>
-            <div  className='groupedImages' >
-                <button onClick={() => {onExperienceDelete(index)}}>
-                    <img alt="" src={Delete} />
+            <div style={styles.groupedImages} onMouseEnter={() => disableDrag()}>
+                <button onClick={() => {onExperienceDelete(index)}} style={styles.button}>
+                    <img alt="" src={Delete}  style={styles.img}/>
                 </button>
-                <img alt="" src={eye} />
+                <img alt="" src={eye} style={styles.img} />
             </div>
           </div>
           {   showInputs &&  
@@ -138,7 +156,7 @@ const WorkSection = ({workExperience, onArrayChange, index, onExperienceDelete, 
                 title="Job Titles" 
                 large={true} 
                 onChange={onArrayChange} 
-                value={workExperience[index].title} 
+                value={workExperience.title} 
                 arrays={workExperience} 
                 index={index}
                 arrayName="workExperience" 
@@ -149,7 +167,7 @@ const WorkSection = ({workExperience, onArrayChange, index, onExperienceDelete, 
                 large={true} 
                 type={"select"} 
                 onChange={onArrayChange} 
-                value={workExperience[index].type} 
+                value={workExperience.type} 
                 arrays={workExperience} 
                 index={index}
                 arrayName="workExperience" 
@@ -160,7 +178,7 @@ const WorkSection = ({workExperience, onArrayChange, index, onExperienceDelete, 
                 large={true} 
                 placeholder='example' 
                 onChange={onArrayChange} 
-                value={workExperience[index].location} 
+                value={workExperience.location} 
                 arrays={workExperience} 
                 index={index}
                 arrayName="workExperience" 
@@ -170,7 +188,7 @@ const WorkSection = ({workExperience, onArrayChange, index, onExperienceDelete, 
                 title="Company Name" 
                 large={true} 
                 onChange={onArrayChange} 
-                value={workExperience[index].company} 
+                value={workExperience.company} 
                 index={index}
                 arrays={workExperience} 
                 arrayName="workExperience" 
@@ -183,19 +201,26 @@ const WorkSection = ({workExperience, onArrayChange, index, onExperienceDelete, 
                 setPresent={setPresent}
                 index={index}
                 arrays={workExperience} 
-                startDate={workExperience[index].startDate}
-                endDate={workExperience[index].endDate}
+                startDate={workExperience.startDate}
+                endDate={workExperience.endDate}
                 arrayName="workExperience" 
               />
+              <TipEditor 
+                summary={descriptionHtml} 
+                setSummaryHtml={setDescriptionHtml} 
+                expand={summaryExpand} 
+                setExpand={setSummaryExpand}
+              />
+
               <p className='flex inputRow' onClick={() => setPresent(!present)}>
                 {present ? <img alt="" src={checkbox} className="checked" /> : <span className='checkbox'/>}
                 I am currently working here 
               </p>
             </div>
           }
-      </div>
+      </li>
   )
 }
 
-export default WorkSection
+export default SortableElement(WorkSection)
 

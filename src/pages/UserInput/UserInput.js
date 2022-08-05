@@ -1,7 +1,9 @@
 import React, { useContext, useEffect, useState, useCallback, useLayoutEffect } from 'react';
 import { jsPDF } from "jspdf";
 import ReactDOMServer from "react-dom/server";
-
+import { SortableElement } from 'react-sortable-hoc'
+import { arrayMoveImmutable } from 'array-move';
+import { HashLink } from 'react-router-hash-link';
 
 import arrow from '../../assets/images/backarrow.svg';
 import additionalButton from '../../assets/images/additionalButton.svg';
@@ -17,8 +19,7 @@ import Union from '../../assets/images/Union.svg';
 import './UserInput.styles.scss';
 import WorkSection from './WorkSection';
 
-
-import { HashLink } from 'react-router-hash-link';
+import SortableWorkList from './SortableWorkList';
 import EducationSection from './EducationSection';
 import PersonalInfoSection from './PersonalInfoSection';
 import SkillsSection from './SkillsSection';
@@ -47,34 +48,20 @@ import {
 import ReferenceSection from './ReferenceSection';
 import ProfessionalSkillsSection from './ProfessionalSkillsSection';
 import VolunteerSection from './VolunteerSection';
+import EditableSection from './EditableSection';
+import SortableMenu from './SortableMenu';
 
 
 
-const TitleContainer = ({title, onDelete}) =>{
-    return(
-        <div className='TitleContainer flex space'>
-            <h2 className='flex'>
-                {title}
-                <img alt='' src={edit2} />
-            </h2>
-            <div>
-                <img alt="" src={eye} />
-                <img alt="" src={Delete} onClick={() => onDelete()} className="DeleteButton" />
-            </div>
-        </div>
-    )
-}
-
-const AdditionalButton = ({items, setShowAdditional, showAdditional}) => {
-    const {show, item} = items
+const AdditionalButton = ({item, show, setAdditionalButtons, AdditionalButtons}) => {
     const onButtonClick = () => {
-        setShowAdditional(items => ({
+        setAdditionalButtons(items => ({
             ...items,
-            [show]: true
+            [item]: true
         }))
     }
    
-    return !showAdditional[show]  && (
+    return !AdditionalButtons[item]  && (
         <button className='AdditionalButtons flex' onClick={() => onButtonClick()}>
             <img alt="" src={Union} />
             <span>{item}</span>
@@ -94,6 +81,7 @@ function UserInput() {
     const [achievementsHtml, setAchievementsHtml] = useState()
     const [volunteerHtml, setVolunteerHtml] = useState()
     const [projectsHtml, setProjectsHtml] = useState()
+    const [resumeName, setResumeName] = useState("Resume Name")
 
 
    
@@ -116,33 +104,44 @@ function UserInput() {
     const [showAddButtons, setShowAddButtons] = useState(false)
     const [windowHeight, setWindowHeight] = useState("")
 
+    const [items, setItems] = useState(data.workExperience)
 
-    const AdditionalButtons = [
-        {
-            item: "Nationality", 
-            show: "Nationality"
-        },
-        {
-            item: "Country", 
-            show: "Country"
-        },
-        {
-            item: "Driving License", 
-            show: "DrivingLicense"
-        },
-        {
-            item: "Place Of Birth", 
-            show: "PlaceOfBirth"
-        },
-        {
-            item: "Date Of Birth", 
-            show: "DateOfBirth"
-        },
-        {
-            item: "Custom Field", 
-            show: "CustomField"
-        },
+    const [titles, setTitles] = useState()
+
+    const MenuItems = [
+        {name: "Basic Info", to: "personal"}, 
+        {name: "Summary", to: "summary"}, 
+        {name: "Skills", to: "Skills"}, 
+        {name: "Work Experience", to: "workExperience"},
+        {name: "Education", to: "Education"}, 
+        {name: "Certification", to: "Certification"},
+        {name: "Organization", to: "Organization"}, 
+        {name: "Language", to: "Language"}
     ]
+
+    useEffect(() => {
+        setData(data => ({
+            ...data,
+            workExperience: items
+        }))
+
+        console.log()
+    }, [items])
+   
+    const onSortEnd = ({ oldIndex, newIndex }) => {
+        setItems(prevItem => (arrayMoveImmutable(prevItem, oldIndex, newIndex)));
+      };
+     
+    const [AdditionalButtons, setAdditionalButtons] =  useState ({
+        "LinkedIn": true,
+        "Twitter": true,
+        "Nationality": false,
+        "Country": false,
+        "Driving License": false,
+        "Place Of Birth": false,
+        "Date Of Birth": false,
+        "Custom Field": false,
+    })
     
 
     const alternate = (variable) => {
@@ -418,13 +417,17 @@ function UserInput() {
                     </button>
                 </div>
             </div>
-            {cropper && <ImageCropper image={data.PersonalInfo.profile} /> }
+            {cropper && 
+                <div className='imagecropper'>
+                    <ImageCropper image={data.PersonalInfo.profile} /> 
+                </div>
+            }
 
             <div className='flex body space'>
                 <div className='c1'>
                     <div className='row1'>
-                        <p className='flex'>
-                            <span>Resume Name</span>
+                        <p className='flex resumename'>
+                            <input type="text" className="" value={resumeName} onChange={(e) => setResumeName(e.target.value)}/>
                             <img alt='' src={edit} />
                         </p>
                         <select>
@@ -433,22 +436,16 @@ function UserInput() {
                     </div>
                     <div className='row2'>
                         <div className='Menu'>
-                            {showSections.PersonalInfo && <HashLink to='#personal'>Basic Info</HashLink>}
-                            {showSections.PersonalInfo && <HashLink to='#summary'>Summary</HashLink>}
-                            {showSections.Skills && <HashLink to='#Skills'>Skills</HashLink>}
-                            {showSections.workExperience && <HashLink to='#workExperience'>Work Experience</HashLink>}
-                            {showSections.Education && <HashLink to='#Education'>Education</HashLink>}
-                            {showSections.Certification && <HashLink to='#Certification'>Certification</HashLink>}
-                            {showSections.Organization && <HashLink to='#Organization'>Organization</HashLink>}
-                            {showSections.Language && <HashLink to='#Language'>Language</HashLink>}
+                            <SortableMenu items={MenuItems}/>
                         </div>
                         <div className='inputs'>
                             {  data.showSections.PersonalInfo && 
                                 <div id='personal'>
-                                    <TitleContainer title={"Personal Info"} onDelete={() => onPersonalDelete("PersonalInfo")}/>
+                                    <EditableSection title={"Personal Info"} onDelete={() => onPersonalDelete("PersonalInfo")} PeronalInfo/>
                                     <PersonalInfoSection 
                                         onPersonalChange={onPersonalChange} 
                                         data={data} 
+                                        setAdditionalButtons={setAdditionalButtons}
                                         AdditionalButtons={AdditionalButtons}
                                     />
                                     <button 
@@ -462,11 +459,19 @@ function UserInput() {
                                             style={{transform: showAddButtons ? "rotate(180deg" : "rotate(0)" }}
                                         />
                                     </button>   
-                                    {showAddButtons &&
+                                    {
+                                        showAddButtons &&
+
                                         <div className='AdditionalButtons_Container'>
                                             {
-                                                AdditionalButtons.map((item, i) => 
-                                                <AdditionalButton items={item} key={i} setShowAdditional={setShowAdditional} showAdditional={showAdditional}/>
+                                                Object.keys(AdditionalButtons).map((keyName, i) => 
+                                                    <AdditionalButton 
+                                                        item={[keyName]} 
+                                                        show={AdditionalButtons[keyName]}
+                                                        key={i} 
+                                                        setAdditionalButtons={setAdditionalButtons} 
+                                                        AdditionalButtons={AdditionalButtons}
+                                                    />
                                                 )
                                             }  
                                         </div>
@@ -475,7 +480,7 @@ function UserInput() {
                             }
                             {  showSections.Summary && 
                                 <div id='summary'>
-                                    <TitleContainer title={"Professional Summary"} onDelete={() => onPersonalDelete("Summary")}/>
+                                    <EditableSection title={"Professional Summary"} onDelete={() => onPersonalDelete("Summary")}/>
                                     <TipEditor summary={data.PersonalInfo.summary} setSummaryHtml={setSummaryHtml} expand={summaryExpand} setExpand={setSummaryExpand}/>
                                 </div>
                                     
@@ -484,7 +489,7 @@ function UserInput() {
 
                             { showSections.workExperience &&
                                 <div id='workExperience'>
-                                    <TitleContainer 
+                                    <EditableSection 
                                         title={"Work Experience"} 
                                         onDelete={
                                             () => onArrayDelete(
@@ -493,20 +498,8 @@ function UserInput() {
                                             )
                                         }
                                     />
-                                    {
-                                        data.workExperience.sort(function(a, b){return a.order-b.order}).map((item, index) => 
-                                        <WorkSection 
-                                            data={data}
-                                            workExperience={data.workExperience}  
-                                            onArrayChange={onArrayChange} 
-                                            index={index} 
-                                            key={index} 
-                                            id={item.order} 
-                                            onExperienceDelete={onExperienceDelete}
-                                            moveCard={moveCard}
-                                            setDraggingWork={setDraggingWork}
-                                        />
-                                    )}
+                                   <SortableWorkList items={items} onSortEnd={onSortEnd} onArrayChange={onArrayChange} onExperienceDelete={onExperienceDelete}/>
+
                                     <button 
                                     className='add_button' 
                                     onClick={() => addMore(data.workExperience, "workExperience")}
@@ -517,7 +510,7 @@ function UserInput() {
                             }
                             {   showSections.Education &&
                                 <div id='Education'>
-                                    <TitleContainer 
+                                    <EditableSection 
                                         title={"Education"} 
                                         onDelete={
                                             () => onArrayDelete(
@@ -544,7 +537,7 @@ function UserInput() {
                             }
                             {   showSections.Volunteer &&
                                 <div id='Volunteer'>
-                                    <TitleContainer 
+                                    <EditableSection 
                                         title={"Volunteer"} 
                                         onDelete={
                                             () => onArrayDelete(
@@ -573,7 +566,7 @@ function UserInput() {
                             }
                             { showSections.Skills &&
                                 <div id='Skills'>
-                                    <TitleContainer title={"Skills"} onDelete={() => onArrayDelete("Skills", data.Skills)}/>
+                                    <EditableSection title={"Skills"} onDelete={() => onArrayDelete("Skills", data.Skills)}/>
                                     { data.Skills.map((e, index) => 
                                         <SkillsSection 
                                         onArrayChange={onArrayChange} 
@@ -597,7 +590,7 @@ function UserInput() {
                             }
                             { showSections.ProfessionalSkills &&
                                 <div id='ProfessionalSkills'>
-                                    <TitleContainer title={"Professional Skills"} onDelete={() => onArrayDelete("ProfessionalSkills", data.ProfessionalSkills)}/>
+                                    <EditableSection title={"Professional Skills"} onDelete={() => onArrayDelete("ProfessionalSkills", data.ProfessionalSkills)}/>
                                     <div className='flex space inputRow'>
 
                                         { data.ProfessionalSkills.map((e, index) => 
@@ -619,7 +612,7 @@ function UserInput() {
                             }
                             {   showSections.Certification &&
                                 <div id='Certification'>
-                                    <TitleContainer title={"Certifications & Awards"} onDelete={() => onArrayDelete("Certification", data.Certification)}/>
+                                    <EditableSection title={"Certifications & Awards"} onDelete={() => onArrayDelete("Certification", data.Certification)}/>
                                     { data.Certification.map((e, index) => 
                                         <CertificationSection 
                                         onArrayChange={onArrayChange} 
@@ -638,7 +631,7 @@ function UserInput() {
                             }
                             {   showSections.Organization &&
                                 <div id='Organization'>
-                                    <TitleContainer title={"Organization"} onDelete={() => onArrayDelete( "Organization", data.Organization)}/>
+                                    <EditableSection title={"Organization"} onDelete={() => onArrayDelete( "Organization", data.Organization)}/>
                                     { data.Organization.map((e, index) => 
                                         <OrganizationSection 
                                         onArrayChange={onArrayChange} 
@@ -657,7 +650,7 @@ function UserInput() {
                             }
                             {   showSections.Language &&
                                 <div id='Language'>
-                                    <TitleContainer title={"Language"} onDelete={() => onArrayDelete("Language", data.Language)}/>
+                                    <EditableSection title={"Language"} onDelete={() => onArrayDelete("Language", data.Language)}/>
                                     { data.Language.map((e, index) => 
                                         <LanguageSection 
                                             onArrayChange={onArrayChange} 
@@ -676,7 +669,7 @@ function UserInput() {
                             }
                             {   showSections.References &&
                                 <div id='References'>
-                                    <TitleContainer title={"References"} onDelete={() => onArrayDelete( "References", data.References)}/>
+                                    <EditableSection title={"References"} onDelete={() => onArrayDelete( "References", data.References)}/>
                                     { data.References.map((ref, index) => 
                                         <ReferenceSection 
                                             onArrayChange={onArrayChange} 
@@ -695,13 +688,13 @@ function UserInput() {
                             }
                             { showSections.Achievements &&
                                 <div>
-                                    <TitleContainer title={"Achievements"} onDelete={() => onArrayDelete( "Achievements", data.Achievements)}/>
+                                    <EditableSection title={"Achievements"} onDelete={() => onArrayDelete( "Achievements", data.Achievements)}/>
                                     <TipEditor summary={data.Achievements} setSummaryHtml={setAchievementsHtml} expand={achievementsExpand} setExpand={setAchievementsExpand}/>
                                 </div>
                             }
                             { showSections.Projects &&
                                 <div>
-                                    <TitleContainer title={"Projects"} onDelete={() => onArrayDelete( "Projects", data.Projects)}/>
+                                    <EditableSection title={"Projects"} onDelete={() => onArrayDelete( "Projects", data.Projects)}/>
                                     <TipEditor summary={data.Projects} setSummaryHtml={setProjectsHtml} expand={projectsExpand} setExpand={setProjectsExpand}/>
                                 </div>
                             }
