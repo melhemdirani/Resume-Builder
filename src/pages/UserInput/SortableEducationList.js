@@ -1,14 +1,14 @@
 import React, {useState} from 'react';
 import WorkSection from './WorkSection';
 import { SortableContainer } from 'react-sortable-hoc';
+import EducationSection from './EducationSection';
  
-const SortableList = (props) => {
-    console.log("values here", props.values)
+const SortableEducationList = (props) => {
     const [disabled, setDisabled] = useState(false)
     return (
         <ul  style={{listStyleImage: "none !important"}}>
         {props.items.map((value, index) => (
-            <WorkSection  
+            <EducationSection  
                 disabled={disabled}
                 key={`item-${index}`} 
                 index={index} 
@@ -17,12 +17,12 @@ const SortableList = (props) => {
                 onExperienceDelete={props.onExperienceDelete} 
                 onArrayChange={props.onArrayChange} 
                 setDisabled={setDisabled}
-                setFunctions={props.setFunctions}
                 values={props.items}
+                setFunctions={props.setFunctions}
             />
         ))}
         </ul>
     );
 }
  
-export default SortableContainer(SortableList);
+export default SortableContainer(SortableEducationList);

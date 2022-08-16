@@ -11,6 +11,7 @@ import group from '../../assets/images/group.svg';
 import eye from '../../assets/images/Eye.svg';
 import Delete from '../../assets/images/delete.svg';
 import TipEditor from './TipEditor';
+import { useEffect } from 'react';
 
 
 
@@ -75,7 +76,19 @@ const styles = {
   }
 }
 
-const WorkSection = ({value, index, onArrayChange, onExperienceDelete, setDisabled, disabled}) => {
+const WorkSection = ({value, onArrayChange, onExperienceDelete, setDisabled, disabled, data, setFunctions, values}) => {
+
+  const [index, setIndex] = useState(-1)
+  const [changedIndex, setChangedIndex] = useState(false)
+
+  useEffect(() => {
+    data.workExperience.filter(function(values, indexs, arr){ 
+      if(values.id === value.id){
+        setIndex(indexs)
+        setChangedIndex(true)
+      }
+    })
+  }, [])
 
   const workExperience= value
   
@@ -118,7 +131,7 @@ const WorkSection = ({value, index, onArrayChange, onExperienceDelete, setDisabl
   }
   
 
-  return(
+  return changedIndex && index !== -1 ? (
       <li 
         style={styles.container}
         onMouseEnter={() => {mouseEnter()}}
@@ -144,7 +157,7 @@ const WorkSection = ({value, index, onArrayChange, onExperienceDelete, setDisabl
                
             </div>
             <div style={styles.groupedImages} onMouseEnter={() => disableDrag()}>
-                <button onClick={() => {onExperienceDelete(index)}} style={styles.button}>
+                <button onClick={() => {onExperienceDelete(index, data.workExperience, "workExperience")}} style={styles.button}>
                     <img alt="" src={Delete}  style={styles.img}/>
                 </button>
                 <img alt="" src={eye} style={styles.img} />
@@ -156,6 +169,8 @@ const WorkSection = ({value, index, onArrayChange, onExperienceDelete, setDisabl
                 title="Job Titles" 
                 large={true} 
                 onChange={onArrayChange} 
+                setFunctions={setFunctions}
+                values={values}
                 value={workExperience.title} 
                 arrays={workExperience} 
                 index={index}
@@ -168,6 +183,8 @@ const WorkSection = ({value, index, onArrayChange, onExperienceDelete, setDisabl
                 type={"select"} 
                 onChange={onArrayChange} 
                 value={workExperience.type} 
+                setFunctions={setFunctions}
+                values={values}
                 arrays={workExperience} 
                 index={index}
                 arrayName="workExperience" 
@@ -180,6 +197,8 @@ const WorkSection = ({value, index, onArrayChange, onExperienceDelete, setDisabl
                 onChange={onArrayChange} 
                 value={workExperience.location} 
                 arrays={workExperience} 
+                setFunctions={setFunctions}
+                values={values}
                 index={index}
                 arrayName="workExperience" 
                 name="location"
@@ -189,6 +208,8 @@ const WorkSection = ({value, index, onArrayChange, onExperienceDelete, setDisabl
                 large={true} 
                 onChange={onArrayChange} 
                 value={workExperience.company} 
+                setFunctions={setFunctions}
+                values={values}
                 index={index}
                 arrays={workExperience} 
                 arrayName="workExperience" 
@@ -197,6 +218,8 @@ const WorkSection = ({value, index, onArrayChange, onExperienceDelete, setDisabl
               <DateInput 
                 title="Start & End Date"  
                 onChange={onArrayChange}
+                setFunctions={setFunctions}
+                values={values}
                 present={present}
                 setPresent={setPresent}
                 index={index}
@@ -220,6 +243,7 @@ const WorkSection = ({value, index, onArrayChange, onExperienceDelete, setDisabl
           }
       </li>
   )
+  : <li></li>
 }
 
 export default SortableElement(WorkSection)

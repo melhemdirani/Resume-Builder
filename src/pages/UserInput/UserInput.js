@@ -23,9 +23,6 @@ import SortableWorkList from './SortableWorkList';
 import EducationSection from './EducationSection';
 import PersonalInfoSection from './PersonalInfoSection';
 import SkillsSection from './SkillsSection';
-import CertificationSection from './CertificationSection';
-import OrganizationSection from './OrganizationSection';
-import LanguageSection from './LanguageSection';
 import AddSections from '../../components/AddSections/AddSections';
 import { EditorContext } from '../../components/EditorContext';
 import ImageCropper from '../../components/ImageCropper/ImageCropper';
@@ -50,6 +47,11 @@ import ProfessionalSkillsSection from './ProfessionalSkillsSection';
 import VolunteerSection from './VolunteerSection';
 import EditableSection from './EditableSection';
 import SortableMenu from './SortableMenu';
+import SortableEducationList from './SortableEducationList';
+import SortableOrganizationList from './Organization/SortableOrganizationList';
+import SortableCertificationList from './Certification/SortableCertificationList';
+import SortableLanguageList from './Languages/SortableLanguageList';
+import SortableSkillList from './Skills/SortableSkillList';
 
 
 
@@ -105,6 +107,11 @@ function UserInput() {
     const [windowHeight, setWindowHeight] = useState("")
 
     const [items, setItems] = useState(data.workExperience)
+    const [items2, setItems2] = useState(data.Education)
+    const [items3, setItems3] = useState(data.Organization)
+    const [items4, setItems4] = useState(data.Certification)
+    const [items5, setItems5] = useState(data.Language)
+    const [items6, setItems6] = useState(data.Skills)
 
     const [titles, setTitles] = useState()
 
@@ -119,18 +126,23 @@ function UserInput() {
         {name: "Language", to: "Language"}
     ]
 
-    useEffect(() => {
-        setData(data => ({
-            ...data,
-            workExperience: items
-        }))
-
-        console.log()
-    }, [items])
    
     const onSortEnd = ({ oldIndex, newIndex }) => {
         setItems(prevItem => (arrayMoveImmutable(prevItem, oldIndex, newIndex)));
       };
+    const onSortEnd2 = ({ oldIndex, newIndex }) => {
+        setItems2(prevItem => (arrayMoveImmutable(prevItem, oldIndex, newIndex)));
+      };
+     
+    const onSortEnd3 = ({ oldIndex, newIndex }) => {
+        setItems3(prevItem => (arrayMoveImmutable(prevItem, oldIndex, newIndex)));
+    };
+    const onSortEnd4 = ({ oldIndex, newIndex }) => {
+        setItems4(prevItem => (arrayMoveImmutable(prevItem, oldIndex, newIndex)));
+    };
+    const onSortEnd5 = ({ oldIndex, newIndex }) => {
+        setItems5(prevItem => (arrayMoveImmutable(prevItem, oldIndex, newIndex)));
+    };
      
     const [AdditionalButtons, setAdditionalButtons] =  useState ({
         "LinkedIn": true,
@@ -153,8 +165,82 @@ function UserInput() {
 
     const showSections = data.showSections
 
-
+    useEffect(() => {
+        if(items !== data.workExperience){
+            setItems(data.workExperience)
+        }
+    }, [data.workExperience])
+    useEffect(() => {
+        if(items4 !== data.Certification){
+            setItems4(data.Certification)
+        }
+    }, [data.Certification])
+    useEffect(() => {
+        if(items5 !== data.Language){
+            setItems5(data.Language)
+        }
+    }, [data.Language])
+    useEffect(() => {
+        if(items2 !== data.Education){
+            setItems2(data.Education)
+        }
+    }, [data.Education])
+    useEffect(() => {
+        if(items3 !== data.Organization){
+            setItems3(data.Organization)
+        }
+    }, [data.Organization])
+    useEffect(() => {
+        if(items6 !== data.Skills){
+            setItems6(data.Skills)
+        }
+    }, [data.Skills])
    
+    useEffect(() => {
+        if(data.workExperience !== items)
+        setData(data => ({
+            ...data,
+            workExperience: items
+        }))
+    }, [items])
+    useEffect(() => {
+        if(data.Language !== items5)
+        setData(data => ({
+            ...data,
+            Language: items5
+        }))
+    }, [items5])
+    
+    useEffect(() => {
+        if(data.Education !== items2)
+        setData(data => ({
+            ...data,
+            Education: items2
+        }))
+
+    }, [items2])
+    useEffect(() => {
+        if(data.Organization !== items3)
+        setData(data => ({
+            ...data,
+            Organization: items3
+        }))
+    }, [items3])
+    useEffect(() => {
+        if(data.Certification !== items4)
+        setData(data => ({
+            ...data,
+            Certification: items4
+        }))
+    }, [items4])
+    useEffect(() => {
+        if(data.Skills !== items6)
+        setData(data => ({
+            ...data,
+            Skills: items6
+        }))
+    }, [items6])
+
     const onPersonalChange = (e) => {
         if(!showSections.PersonalInfo){
             setData(data => ({
@@ -178,6 +264,35 @@ function UserInput() {
             ]
         }))
     }
+    const onArrayChange2 = (e, setFunction, values, i ) => {
+        let {value, name } = e.target
+        let index = i 
+        setFunction([
+            ...values.slice(0, index), {...values[index], [name]: value }, ...values.slice(index + 1)
+        ])
+    }
+    const onArrayChange3 = (e, arrays, arrayName, i) => {
+        let {value, name } = e.target
+        let index = i 
+        setItems5([
+            ...items5.slice(0, index), {...items5[index], [name]: value }, ...items5.slice(index + 1)
+        ])
+    }
+    const onArrayChange4 = (e, arrays, arrayName, i) => {
+        let {value, name } = e.target
+        let index = i 
+        setItems3([
+            ...items3.slice(0, index), {...items3[index], [name]: value }, ...items3.slice(index + 1)
+        ])
+    }
+    const onArrayChange5 = (e, arrays, arrayName, i) => {
+        let {value, name } = e.target
+        let index = i 
+        setItems4([
+            ...items4.slice(0, index), {...items4[index], [name]: value }, ...items4.slice(index + 1)
+        ])
+    }
+
     const addMore = (arrayName, array ) => {
         let arr = arrayName[arrayName.length - 1]
         let newArr = {...arr}
@@ -226,17 +341,18 @@ function UserInput() {
             showSections:{ ...data.showSections, [Array]: false}
         }))
     }
-    const onExperienceDelete = (i) => {
-        if(data.workExperience.length < 2 ){
-            return onArrayDelete( "workExperience", data.workExperience)
+    const onExperienceDelete = (i, array, arrayName) => {
+
+        if(array < 2 ){
+            return onArrayDelete( arrayName, array)
         } else{
-            let newWorkExperience = data.workExperience
+            let newWorkExperience = array
             let newArr= newWorkExperience.filter(function(value, index, arr){ 
                 return index !== i;
             });
             setData(data => ({
                 ...data,
-                workExperience: newArr
+                [arrayName]: newArr
             }))
         }
     }   
@@ -440,7 +556,7 @@ function UserInput() {
                         </div>
                         <div className='inputs'>
                             {  data.showSections.PersonalInfo && 
-                                <div id='personal'>
+                                <div id='personal' className="subInputs_container">
                                     <EditableSection title={"Personal Info"} onDelete={() => onPersonalDelete("PersonalInfo")} PeronalInfo/>
                                     <PersonalInfoSection 
                                         onPersonalChange={onPersonalChange} 
@@ -479,16 +595,13 @@ function UserInput() {
                                 </div>
                             }
                             {  showSections.Summary && 
-                                <div id='summary'>
+                                <div id='summary'  className="subInputs_container summary">
                                     <EditableSection title={"Professional Summary"} onDelete={() => onPersonalDelete("Summary")}/>
                                     <TipEditor summary={data.PersonalInfo.summary} setSummaryHtml={setSummaryHtml} expand={summaryExpand} setExpand={setSummaryExpand}/>
                                 </div>
-                                    
-                            }
-                     
-
+                            }x  
                             { showSections.workExperience &&
-                                <div id='workExperience'>
+                                <div id='workExperience'  className="subInputs_container">
                                     <EditableSection 
                                         title={"Work Experience"} 
                                         onDelete={
@@ -498,7 +611,14 @@ function UserInput() {
                                             )
                                         }
                                     />
-                                   <SortableWorkList items={items} onSortEnd={onSortEnd} onArrayChange={onArrayChange} onExperienceDelete={onExperienceDelete}/>
+                                   <SortableWorkList 
+                                        items={items} 
+                                        onSortEnd={onSortEnd} 
+                                        onArrayChange={onArrayChange2} 
+                                        onExperienceDelete={onExperienceDelete}
+                                        data={data}
+                                        setFunctions={setItems}
+                                    />
 
                                     <button 
                                     className='add_button' 
@@ -509,7 +629,7 @@ function UserInput() {
                                 </div>
                             }
                             {   showSections.Education &&
-                                <div id='Education'>
+                                <div id='Education'  className="subInputs_container">
                                     <EditableSection 
                                         title={"Education"} 
                                         onDelete={
@@ -519,14 +639,14 @@ function UserInput() {
                                             )
                                         }
                                     />
-                                    { data.Education.map((e, index) => 
-                                        <EducationSection 
-                                        Education={data.Education}  
-                                        onArrayChange={onArrayChange} 
-                                        index={index} 
-                                        key={index}  
-                                        />
-                                    )}
+                                   <SortableEducationList 
+                                        items={items2} 
+                                        onSortEnd={onSortEnd2} 
+                                        setFunctions={setItems2}
+                                        onArrayChange={onArrayChange2} 
+                                        onExperienceDelete={onExperienceDelete}
+                                        data={data}
+                                    />
                                     <button 
                                     className='add_button' 
                                     onClick={() => addMore(data.Education, "Education")}
@@ -536,7 +656,7 @@ function UserInput() {
                                 </div>
                             }
                             {   showSections.Volunteer &&
-                                <div id='Volunteer'>
+                                <div id='Volunteer'  className="subInputs_container">
                                     <EditableSection 
                                         title={"Volunteer"} 
                                         onDelete={
@@ -565,17 +685,16 @@ function UserInput() {
                                 </div>
                             }
                             { showSections.Skills &&
-                                <div id='Skills'>
+                                <div id='Skills'  className="subInputs_container">
                                     <EditableSection title={"Skills"} onDelete={() => onArrayDelete("Skills", data.Skills)}/>
-                                    { data.Skills.map((e, index) => 
-                                        <SkillsSection 
-                                        onArrayChange={onArrayChange} 
-                                        Skills={data.Skills} 
-                                        j={index}
-                                        key={index}
-                                        hideLevel={hideLevel}
+                                    <SortableSkillList 
+                                        items={items6} 
+                                        onSortEnd={onSortEnd2} 
+                                        setFunctions={setItems6}
+                                        onArrayChange={onArrayChange2} 
+                                        onExperienceDelete={onExperienceDelete}
+                                        data={data}
                                     />
-                                    )}
                                     <button 
                                     className='add_button' 
                                     onClick={() => addMore(data.Skills, "Skills")}
@@ -589,7 +708,7 @@ function UserInput() {
                                 </div>
                             }
                             { showSections.ProfessionalSkills &&
-                                <div id='ProfessionalSkills'>
+                                <div id='ProfessionalSkills'  className="subInputs_container">
                                     <EditableSection title={"Professional Skills"} onDelete={() => onArrayDelete("ProfessionalSkills", data.ProfessionalSkills)}/>
                                     <div className='flex space inputRow'>
 
@@ -611,16 +730,15 @@ function UserInput() {
                                 </div>
                             }
                             {   showSections.Certification &&
-                                <div id='Certification'>
+                                <div id='Certification'  className="subInputs_container">
                                     <EditableSection title={"Certifications & Awards"} onDelete={() => onArrayDelete("Certification", data.Certification)}/>
-                                    { data.Certification.map((e, index) => 
-                                        <CertificationSection 
-                                        onArrayChange={onArrayChange} 
-                                        data={data} 
-                                        index={index}
-                                        key={index}
+                                    <SortableCertificationList 
+                                        items={items4} 
+                                        onSortEnd={onSortEnd4} 
+                                        onArrayChange={onArrayChange5} 
+                                        onExperienceDelete={onExperienceDelete}
+                                        data={data}
                                     />
-                                    )}
                                     <button 
                                     className='add_button' 
                                     onClick={() => addMore(data.Certification, "Certification")}
@@ -630,16 +748,16 @@ function UserInput() {
                                 </div>
                             }
                             {   showSections.Organization &&
-                                <div id='Organization'>
+                                <div id='Organization'  className="subInputs_container">
                                     <EditableSection title={"Organization"} onDelete={() => onArrayDelete( "Organization", data.Organization)}/>
-                                    { data.Organization.map((e, index) => 
-                                        <OrganizationSection 
-                                        onArrayChange={onArrayChange} 
-                                        Organization={data.Organization} 
-                                        index={index}x
-                                        key={index}
+                                    <SortableOrganizationList 
+                                        items={items3} 
+                                        onSortEnd={onSortEnd3} 
+                                        setFunctions={setItems3}
+                                        onArrayChange={onArrayChange2} 
+                                        onExperienceDelete={onExperienceDelete}
+                                        data={data}
                                     />
-                                    )}
                                     <button 
                                     className='add_button' 
                                     onClick={() => addMore(data.Organization, "Organization")}
@@ -649,16 +767,16 @@ function UserInput() {
                                 </div>
                             }
                             {   showSections.Language &&
-                                <div id='Language'>
+                                <div id='Language'  className="subInputs_container">
                                     <EditableSection title={"Language"} onDelete={() => onArrayDelete("Language", data.Language)}/>
-                                    { data.Language.map((e, index) => 
-                                        <LanguageSection 
-                                            onArrayChange={onArrayChange} 
-                                            Language={data.Language} 
-                                            j={index}
-                                            key={index}
-                                        />
-                                    )}
+                                    <SortableLanguageList 
+                                        items={items5} 
+                                        onSortEnd={onSortEnd5} 
+                                        setFunctions={setItems5}
+                                        onArrayChange={onArrayChange2} 
+                                        onExperienceDelete={onExperienceDelete}
+                                        data={data}
+                                    />
                                     <button 
                                     className='add_button' 
                                     onClick={() => addMore(data.Language, "Language")}
@@ -668,7 +786,7 @@ function UserInput() {
                                 </div>
                             }
                             {   showSections.References &&
-                                <div id='References'>
+                                <div id='References'  className="subInputs_container">
                                     <EditableSection title={"References"} onDelete={() => onArrayDelete( "References", data.References)}/>
                                     { data.References.map((ref, index) => 
                                         <ReferenceSection 
@@ -687,13 +805,13 @@ function UserInput() {
                                 </div>
                             }
                             { showSections.Achievements &&
-                                <div>
+                                <div  className="subInputs_container">
                                     <EditableSection title={"Achievements"} onDelete={() => onArrayDelete( "Achievements", data.Achievements)}/>
                                     <TipEditor summary={data.Achievements} setSummaryHtml={setAchievementsHtml} expand={achievementsExpand} setExpand={setAchievementsExpand}/>
                                 </div>
                             }
                             { showSections.Projects &&
-                                <div>
+                                <div  className="subInputs_container">
                                     <EditableSection title={"Projects"} onDelete={() => onArrayDelete( "Projects", data.Projects)}/>
                                     <TipEditor summary={data.Projects} setSummaryHtml={setProjectsHtml} expand={projectsExpand} setExpand={setProjectsExpand}/>
                                 </div>

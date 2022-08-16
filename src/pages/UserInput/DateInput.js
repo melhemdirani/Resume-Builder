@@ -38,7 +38,7 @@ const Calendar = ({selectedMonth, setSelectedMonth, selectedYear, setSelectedYea
     )
 }
 
-const DatePicker = ({title, month, onChange, arrayName, arrays, index, date, present, setPresent}) => {
+const DatePicker = ({title, month, onChange, arrayName, arrays, index, date, present, setPresent, values, setFunctions}) => {
 
     const [selectedMonth, setSelectedMonth] = useState(`${month}`)
     const [selectedYear, setSelectedYear] = useState(2020)
@@ -69,7 +69,7 @@ const DatePicker = ({title, month, onChange, arrayName, arrays, index, date, pre
 
         let e ={ target: {name: name, value: selectedDate}}
         if(focus){
-            onChange(e, arrays, arrayName, index )
+            onChange(e, setFunctions, values, index )
         }
 
     }, [selectedMonth, selectedYear, focus])
@@ -80,10 +80,11 @@ const DatePicker = ({title, month, onChange, arrayName, arrays, index, date, pre
         let e ={ target: {name: name, value: selectedDate}}
         if (present){
             setStartRender("present")
-            onChange(e, arrays, arrayName, index );
+            onChange(e, setFunctions, values, index )
+
         } else if(focus) {
             setStartRender(selectedDate);
-            onChange(e, arrays, arrayName, index );
+            onChange(e, setFunctions, values, index )
         }
     }, [present])
   
@@ -109,7 +110,7 @@ const DatePicker = ({title, month, onChange, arrayName, arrays, index, date, pre
     )
 }
 
-export default function DateInput({onChange, arrayName, arrays, index, startDate, endDate, present, setPresent}) {
+export default function DateInput({onChange, arrayName, arrays, index, startDate, endDate, present, setPresent, setFunctions, values}) {
   return (
       <div className='InputContainer input2 inputRow'>
             <label>
@@ -124,6 +125,9 @@ export default function DateInput({onChange, arrayName, arrays, index, startDate
            arrays={arrays}
            date={startDate}
            index={index}
+           setFunctions={setFunctions}
+           values={values}
+
         />
         <DatePicker 
             title="End date"
@@ -135,6 +139,8 @@ export default function DateInput({onChange, arrayName, arrays, index, startDate
             index={index}
             present={present}
             setPresent={setPresent}
+            setFunctions={setFunctions}
+            values={values}
         />
         </div>
     </div>

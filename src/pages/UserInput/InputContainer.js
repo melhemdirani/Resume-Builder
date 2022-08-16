@@ -4,10 +4,23 @@ import React, { useEffect, useState } from 'react';
 
 
 
-export default function InputContainer({title, large, placeholder, type, onChange, value, name, arrays, arrayName, onSkillClick, skillLevel, index}) {
-   
-
-
+export default function InputContainer({
+    title, 
+    large,
+    placeholder,
+    type, 
+    onChange,
+    value, 
+    name, 
+    arrays, 
+    arrayName, 
+    onSkillClick, 
+    skillLevel, 
+    setFunctions,
+    values,
+    index}) {
+    
+    console.log("index here", values)
     return (
         <div className={ large ? 'InputContainer input2 inputRow' : 'InputContainer' }>
             <label>
@@ -40,7 +53,12 @@ export default function InputContainer({title, large, placeholder, type, onChang
                         />
                     )}
                 </div>
-                : <input type="text" placeholder={placeholder} value={value} onChange={(e) => onChange(e, arrays, arrayName, index)} name={name} />
+                : <input 
+                    type="text" 
+                    placeholder={placeholder} 
+                    value={value} 
+                    onChange={(e) => onChange(e, setFunctions, values, index)} name={name} 
+                />
             }
         </div>
     )

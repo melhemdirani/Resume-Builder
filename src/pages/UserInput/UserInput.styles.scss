@@ -260,10 +260,17 @@
             }
             .inputs{
                 width: 568px;
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+                .subInputs_container{
+                    width: 100%;
+                }
                 .TitleContainer{
                     padding: 31.56px 0 7px 0;
                     border-bottom: 1px solid #D7D7D7;
                     margin-bottom: 16.7px;
+                    width: 120%;
                     h2{
                         margin: 0;
                     }

@@ -212,6 +212,7 @@ export const Resume1_Data = {
             CGPA: "3.80",
             location: "",
             CGPAMax: "4",
+            id: 0,
             description:[
                 
             ]
@@ -226,23 +227,43 @@ export const Resume1_Data = {
             CGPA: "2.80",
             location: "",
             CGPAMax: "4",
+            id: 1,
             description:[
                 
             ]
-        }
+        },
+  
+        {
+            title: "BSc",
+            field: "Business Administration",
+            university: "University of Dhaka",
+            startDate: "Sep 2013",
+            endDate: "Jun 2018",
+            CGPA: "2.80",
+            location: "",
+            CGPAMax: "4",
+            id: 2,
+            description:[
+                
+            ]
+        },
+  
     ],
     Certification: [
         {
             title: "User Experience Design",
             year: "2019",
             website: "www.theuserhub.com",
-            company: "UserHub"
+            company: "UserHub",
+            id: 0,
         },
         {
             title: "User Interface Design",
             year: "2018",
             website: "www.shikhbeshobai.com",
-            company: "Shikhbe Sobai"
+            company: "Shikhbe Sobai",
+            id: 1,
+
         },
      
     ],
@@ -263,26 +284,32 @@ export const Resume1_Data = {
     Skills: [
         {
             name: "Leadership",
-            value: 5
+            value: 5,
+            id: 0,
         },
         {
             name: "Teamwork",
+            id: 1,
             value: 1
         },
         {
             name: "Communication",
+            id: 2,
             value: 2
         },
         {
             name: "Problem-Solving",
+            id: 3,
             value: 4
         },
         {
             name: "Work Ethic",
+            id: 4,
             value: 3
         },
         {
             name: "Flexibility",
+            id: 5,
             value: 2
         },
     ],
@@ -292,32 +319,39 @@ export const Resume1_Data = {
             position: "Graphic Designer",
             sector: "Children & Education",
             startDate: "Sep 2016",
-            endDate: "present"
+            endDate: "present",
+            id: 0,
         },
         {
             name: "Bidyanondo Foundation",
             position: "Graphic Designer",
             sector: "Children & Education",
             startDate: "Sep 2016",
-            endDate: "present"
+            endDate: "present",
+            id: 1,
+
         },
     ],
     Language: [
         {
             language: "Bangla",
-            level: "Full Professional Proficiency"
+            level: "Full Professional Proficiency",
+            id: 0
         },
         {
             language: "English",
-            level: "Native or Bilingual Proficiency"
+            level: "Native or Bilingual Proficiency",
+            id: 1
         },
         {
             language: "Hindi",
-            level: "Limited Working Prociciency"
+            level: "Limited Working Prociciency",
+            id: 2
         },
         {
             language: "Spanish",
-            level: "Limited Working Prociciency"
+            level: "Limited Working Prociciency",
+            id: 3
         },
     ],
     References: [

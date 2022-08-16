@@ -1,14 +1,13 @@
 import React, {useState} from 'react';
-import WorkSection from './WorkSection';
 import { SortableContainer } from 'react-sortable-hoc';
+import SkillsSection from './SkillsSection';
  
-const SortableList = (props) => {
-    console.log("values here", props.values)
+const SortableOrganizationList = (props) => {
     const [disabled, setDisabled] = useState(false)
     return (
         <ul  style={{listStyleImage: "none !important"}}>
         {props.items.map((value, index) => (
-            <WorkSection  
+            <SkillsSection  
                 disabled={disabled}
                 key={`item-${index}`} 
                 index={index} 
@@ -25,4 +24,4 @@ const SortableList = (props) => {
     );
 }
  
-export default SortableContainer(SortableList);
+export default SortableContainer(SortableOrganizationList);
